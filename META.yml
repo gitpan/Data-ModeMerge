@@ -1,0 +1,18 @@
+---
+abstract: 'Merge two nested data structures, with merging modes and options'
+author:
+  - 'Steven Haryanto <stevenharyanto@gmail.com>'
+generated_by: 'Dist::Zilla version 1.093000'
+license: perl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: Data-ModeMerge
+requires:
+  Moose: 0
+  Pod::Coverage: 0.18
+  Storable: 0
+  Test::More: 0
+  Test::Pod::Coverage: 1.08
+  perl: 5.010000
+version: 0.13
