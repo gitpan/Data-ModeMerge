@@ -1,5 +1,5 @@
 package Data::ModeMerge::Mode::NORMAL;
-our $VERSION = '0.13';
+our $VERSION = '0.14';
 
 
 # ABSTRACT: Handler for Data::ModeMerge NORMAL merge mode
@@ -64,7 +64,7 @@ Data::ModeMerge::Mode::NORMAL - Handler for Data::ModeMerge NORMAL merge mode
 
 =head1 VERSION
 
-version 0.13
+version 0.14
 
 =head1 SYNOPSIS
 

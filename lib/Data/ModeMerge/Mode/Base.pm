@@ -1,5 +1,5 @@
 package Data::ModeMerge::Mode::Base;
-our $VERSION = '0.13';
+our $VERSION = '0.14';
 
 
 # ABSTRACT: Base class for Data::ModeMerge mode handler
@@ -134,6 +134,7 @@ sub _gen_left {
                 }
                 $hl->{$_} = [$m2, $l->{$old}];
             } else {
+                next if $esub && !$esub->($_);
                 $hl->{$_} = [$mode, $l->{$_}];
             }
         }
@@ -143,6 +144,7 @@ sub _gen_left {
             $hl->{$_} = [$mode, $l->{$_}];
         }
     }
+    #print "DEBUG: Leaving _gen_left, result = ".$mm->_dump($hl)."\n";
     $hl;
 }
 
@@ -176,6 +178,7 @@ sub _gen_right {
                 }
                 $hr->{$_}{$m2} = $r->{$old};
             } else {
+                next if $esub && !$esub->($_);
                 $hr->{$_} = {$mode => $r->{$_}};
             }
         }
@@ -185,6 +188,7 @@ sub _gen_right {
             $hr->{$_} = {$mode => $r->{$_}}
         }
     }
+    #print "DEBUG: Leaving _gen_right, result = ".$mm->_dump($hr)."\n";
     $hr;
 }
 
@@ -453,7 +457,7 @@ Data::ModeMerge::Mode::Base - Base class for Data::ModeMerge mode handler
 
 =head1 VERSION
 
-version 0.13
+version 0.14
 
 =head1 SYNOPSIS
 

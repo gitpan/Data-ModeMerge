@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::More tests => 31;
+use Test::More tests => 68;
 
 use lib './t';
 require 'testlib.pm';
@@ -50,10 +50,39 @@ merge_ok({''=>{}}, {''=>{}}, 'valid 1');
 
 my $h1 = { 'a'=> 1,  'c'=> 2,  'd'=> 3,  'k'=> 4,  'n'=> 5, 'n2'=> 5,  's'=> 6};
 my $h2 = {'+a'=>10, '.c'=>20, '!d'=>30, '^k'=>40, '*n'=>50, 'n2'=>50, '-s'=>60};
+my $hm = {a=>11, c=>220, "^k"=>40, n=>50, n2=>50, s=>-54};
 
-merge_is ($h1                                   , $h2, {a=>11, c=>220, "^k"=>40, n=>50, n2=>50, s=>-54}, "ok none");
-merge_is ({%$h1, ''=>{disable_modes=>[qw/ADD/]}}, $h2, {a=>1, '+a'=>10, c=>220, "^k"=>40, n=>50, n2=>50, s=>-54}, "ok disable_modes");
-merge_is ({a=>{a2=>1}, ''=>{recurse_hash=>0}}   , {a=>{".a2"=>2}}, {a=>{".a2"=>2}}, "ok recurse_hash");
-# XXX ok recurse_array, etc
+for (
+    {l=>$h1, ok=>{}, r=>$h2, res=>$hm, desc=>"none"},
+    {l=>{a=>{a2=>1}}, ok=>{recurse_hash=>0}, r=>{a=>{".a2"=>2}}, res=>{a=>{".a2"=>2}}, desc=>"recurse_hash"},
+    {l=>{a=>[{a2=>1}]}, ok=>{recurse_array=>1}, r=>{a=>[{b2=>2}]}, res=>{a=>[{a2=>1, b2=>2}]}, desc=>'recursive array'},
+    {l=>$h1, ok=>{parse_prefix=>0}, r=>$h2, res=>{%$h1, %$h2}, desc=>"parse_prefix"},
+    {l=>$h1, ok=>{default_mode=>"KEEP"}, r=>$h2, res=>$h1, desc=>"default_mode"},
+    {l=>$h1, ok=>{disable_modes=>[qw/ADD/]}, r=>$h2, res=>{%$hm, a=>1, '+a'=>10}, desc=>"disable_modes"},
+    {l=>{a=>1 }, ok=>{allow_create_array=>0 }, r=>{a=>[]}, fail=>1, desc=>"allow_create_array"},
+    {l=>{a=>1 }, ok=>{allow_create_hash=>0  }, r=>{a=>{}}, fail=>1, desc=>"allow_create_hash"},
+    {l=>{a=>[]}, ok=>{allow_destroy_array=>0}, r=>{a=>1 }, fail=>1, desc=>"allow_destroy_array"},
+    {l=>{a=>{}}, ok=>{allow_destroy_hash=>0 }, r=>{a=>1 }, fail=>1, desc=>"allow_destroy_hash"},
+    {l=>$h1, ok=>{exclude_parse=>['+a']}     , r=>$h2, res=>{%$hm, a=>1, '+a'=>10}, desc=>"exclude_parse"},
+    {l=>$h1, ok=>{include_parse=>['!d','^k']}, r=>$h2, res=>{%$hm, a=>1, '+a'=>10, c=>2, '.c'=>20, n=>5, '*n'=>50, n2=>50, s=>6, '-s'=>60}, desc=>"include_parse"},
+    {l=>$h1, ok=>{exclude_parse_regex=>'a'}  , r=>$h2, res=>{%$hm, a=>1, '+a'=>10}, desc=>"exclude_parse_regex"},
+    {l=>$h1, ok=>{include_parse_regex=>'d|k'}, r=>$h2, res=>{%$hm, a=>1, '+a'=>10, c=>2, '.c'=>20, n=>5, '*n'=>50, n2=>50, s=>6, '-s'=>60}, desc=>"include_parse_regex"},
+    {l=>$h1, ok=>{exclude_merge=>['a']}      , r=>$h2, res=>{%$hm, a=>1}, desc=>"exclude_merge"},
+    {l=>$h1, ok=>{include_merge=>[qw/d k/]}  , r=>$h2, res=>{%$hm, a=>1, c=>2, n=>5, n2=>5, s=>6}, desc=>"include_merge"},
+    {l=>$h1, ok=>{exclude_merge_regex=>'a'}  , r=>$h2, res=>{%$hm, a=>1}, desc=>"exclude_merge_regex"},
+    {l=>$h1, ok=>{include_merge_regex=>'d|k'}, r=>$h2, res=>{%$hm, a=>1, c=>2, n=>5, n2=>5, s=>6}, desc=>"include_merge_regex"},
+    {l=>$h1, ok=>{set_prefix=>{ADD=>'.',CONCAT=>'+'}}, r=>$h2, res=>{%$hm, a=>110, c=>22}, desc=>"set_prefix"},
+    {l=>{"^a"=>1}, ok=>{readd_prefix=>0}, r=>{a=>2}, res=>{a=>1}, desc=>"readd_prefix"},
+) {
+    # we test putting options key on the left hash, as well as on the
+    # right hash
+    if ($_->{fail}) {
+        merge_fail({ %{$_->{l}}, ''=>$_->{ok} }, $_->{r}, "okl $_->{desc}");
+        merge_fail($_->{l}, { %{$_->{r}}, ''=>$_->{ok} }, "okr $_->{desc}");
+    } else {
+        merge_is({ %{$_->{l}}, ''=>$_->{ok} }, $_->{r}, $_->{res}, "okl $_->{desc}");
+        merge_is($_->{l}, { %{$_->{r}}, ''=>$_->{ok} }, $_->{res}, "okr $_->{desc}");
+    }
+}
 
 # XXX recursive

@@ -1,5 +1,11 @@
 Revision history for Data-ModeMerge
 
+0.14    2009-12-07
+
+        - Minor fix to Makefile.PL
+
+        - Minor fix to options key handling
+        
 0.13    2009-12-07
 
         This is a major refactoring of the module. The goal is to make
