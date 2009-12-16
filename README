@@ -3,7 +3,7 @@ NAME
     and options
 
 VERSION
-    version 0.17
+    version 0.18
 
 SYNOPSIS
         use Data::ModeMerge;

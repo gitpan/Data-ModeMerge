@@ -24,6 +24,7 @@ t-a/02-backup.t
 t-a/03-method-add_prefix.t
 t-a/03-method-check_prefix.t
 t-a/03-method-remove_prefix.t
+t-a/04-mh-change_prefix.t
 t-a/10-merge-add.t
 t-a/10-merge-concat.t
 t-a/10-merge-delete.t

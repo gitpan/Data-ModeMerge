@@ -1,5 +1,12 @@
 Revision history for Data-ModeMerge
 
+0.18   2009-12-12
+
+       - bug fix: custom prefix_re got reset in hash merge
+
+       - bug fix: restore_config() didn't recreate DM::Config object
+         but hash instead
+
 0.17   2009-12-12
 
        - INCOMPATIBLE BEHAVIOUR CHANGE: SUBTRACT merge on two hashes

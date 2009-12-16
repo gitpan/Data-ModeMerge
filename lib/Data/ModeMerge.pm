@@ -1,5 +1,5 @@
 package Data::ModeMerge;
-our $VERSION = '0.17';
+our $VERSION = '0.18';
 # ABSTRACT: Merge two nested data structures, with merging modes and options
 
 
@@ -241,7 +241,7 @@ sub save_config {
 sub restore_config {
     my ($self) = @_;
     my $config = pop @{ $self->config_stack };
-    $self->config($config);
+    $self->config(Data::ModeMerge::Config->new(%$config));
 }
 
 
@@ -340,6 +340,7 @@ sub _merge {
         } else {
             $self->mem->{$memkey} = {res=>undef, todo=>[]};
             $self->cur_mem_key($memkey);
+            #print "DEBUG: invoking ".$mh->name."'s $meth(".$self->_dump($key).", ".$self->_dump($l).", ".$self->_dump($r).")\n";
             my ($newkey, $res, $backup) = $mh->$meth($key, $l, $r);
             #print "DEBUG: setting res for mem<$memkey>\n";
             $self->mem->{$memkey}{res} = [$newkey, $res, $backup];
@@ -348,6 +349,7 @@ sub _merge {
         }
     } else {
         $self->_process_todo;
+        #print "DEBUG: invoking ".$mh->name."'s $meth(".$self->_dump($key).", ".$self->_dump($l).", ".$self->_dump($r).")\n";
         return $mh->$meth($key, $l, $r);
     }
 }
@@ -377,7 +379,7 @@ Data::ModeMerge - Merge two nested data structures, with merging modes and optio
 
 =head1 VERSION
 
-version 0.17
+version 0.18
 
 =head1 SYNOPSIS
 

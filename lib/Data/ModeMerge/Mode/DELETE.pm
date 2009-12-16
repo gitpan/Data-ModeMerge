@@ -1,5 +1,5 @@
 package Data::ModeMerge::Mode::DELETE;
-our $VERSION = '0.17';
+our $VERSION = '0.18';
 # ABSTRACT: Handler for Data::ModeMerge DELETE merge mode
 
 
@@ -14,18 +14,17 @@ sub default_prefix { '!' }
 
 sub default_prefix_re { qr/^!/ }
 
-# merge_left_only and merge_right_only are a bit different: they
-# should return an extra argument $mode, i.e. ($key, $result, $backup,
-# $is_circular, $mode)
+# merge_left_only and merge_right_only are a bit different: they are
+# called with $l only or $r only instead of both, and should return an
+# extra argument $mode, i.e. ($key, $result, $backup, $is_circular,
+# $mode)
 sub merge_left_only {
     my ($self, $key, $l) = @_;
-    print "left only called\n";
     return;
 }
 
 sub merge_right_only {
     my ($self, $key, $r) = @_;
-    print "right only called\n";
     return;
 }
 
@@ -84,7 +83,7 @@ Data::ModeMerge::Mode::DELETE - Handler for Data::ModeMerge DELETE merge mode
 
 =head1 VERSION
 
-version 0.17
+version 0.18
 
 =head1 SYNOPSIS
 

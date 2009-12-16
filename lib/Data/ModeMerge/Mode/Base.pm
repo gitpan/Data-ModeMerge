@@ -1,5 +1,5 @@
 package Data::ModeMerge::Mode::Base;
-our $VERSION = '0.17';
+our $VERSION = '0.18';
 # ABSTRACT: Base class for Data::ModeMerge mode handler
 
 
@@ -135,7 +135,7 @@ sub _prefilter_hash {
             $res->{$k} = $v;
         }
     }
-        
+
     $res;
 }
 
@@ -146,7 +146,7 @@ sub _gen_left {
     my $mm = $self->merger;
     my $c = $mm->config;
 
-    #print "DEBUG: Entering _gen_left(".$mm->_dump($l).", $mode, ep=$ep, ip=$ip, epr=$epr, ipr=$ipr)\n";
+    #print "DEBUG: Entering _gen_left(".$mm->_dump($l).", $mode, ...)\n";
 
     if ($c->premerge_pair_filter) {
         $l = $self->_prefilter_hash($l, "premerge filter left hash",
@@ -197,7 +197,7 @@ sub _gen_right {
     my $mm = $self->merger;
     my $c = $mm->config;
 
-    #print "DEBUG: Entering _gen_right(".$mm->_dump($r).", $mode, ep=$ep, ip=$ip, epr=$epr, ipr=$ipr)\n";
+    #print "DEBUG: Entering _gen_right(".$mm->_dump($r).", $mode, ...)\n";
 
     if ($c->premerge_pair_filter) {
         $r = $self->_prefilter_hash($r, "premerge filter right hash",
@@ -435,19 +435,30 @@ sub merge_HASH_HASH {
     }
 
     my $sp = $c->set_prefix;
-    if (defined($sp) && ref($sp) ne 'HASH') {
-        $mm->push_error("Invalid config value `set_prefix`: must be a hash");
-        return;
-    }
-    for my $mh (values %{ $mm->modes }) {
-        my $n = $mh->name;
-        if ($sp && $sp->{$n}) {
-            $mh->prefix($sp->{$n});
-            my $re = quotemeta($sp->{$n});
-            $mh->prefix_re(qr/^$re/);
-        } else {
-            $mh->prefix($mh->default_prefix);
-            $mh->prefix_re($mh->default_prefix_re);
+    my $saved_prefixes;
+    if (defined($sp)) {
+        if (ref($sp) ne 'HASH') {
+            $mm->push_error("Invalid config value `set_prefix`: must be a hash");
+            return;
+        }
+        $saved_prefixes = {};
+        for my $mh (values %{ $mm->modes }) {
+            my $n = $mh->name;
+            if ($sp->{$n}) {
+                $saved_prefixes->{$n} = {
+                    prefix => $mh->prefix,
+                    prefix_re => $mh->prefix_re,
+                    check_prefix_sub => $mh->check_prefix_sub,
+                    add_prefix_sub => $mh->add_prefix_sub,
+                    remove_prefix_sub => $mh->remove_prefix_sub,
+                };
+                $mh->prefix($sp->{$n});
+                my $re = quotemeta($sp->{$n});
+                $mh->prefix_re(qr/^$re/);
+                $mh->check_prefix_sub(undef);
+                $mh->add_prefix_sub(undef);
+                $mh->remove_prefix_sub(undef);
+            }
         }
     }
 
@@ -533,6 +544,18 @@ sub merge_HASH_HASH {
         $res->{$_} = $res->{$_}[1] for keys %$res;
     }
 
+    if ($saved_prefixes) {
+        for (keys %$saved_prefixes) {
+            my $mh = $mm->modes->{$_};
+            my $s = $saved_prefixes->{$_};
+            $mh->prefix($s->{prefix});
+            $mh->prefix_re($s->{prefix});
+            $mh->check_prefix_sub($s->{prefix});
+            $mh->add_prefix_sub($s->{prefix});
+            $mh->remove_prefix_sub($s->{remove_prefix_sub});
+        }
+    }
+
     $mm->restore_config if $config_replaced;
 
     #print "DEBUG: backup = ".Data::Dumper->new([$backup])->Indent(0)->Terse(1)->Dump."\n";
@@ -553,7 +576,7 @@ Data::ModeMerge::Mode::Base - Base class for Data::ModeMerge mode handler
 
 =head1 VERSION
 
-version 0.17
+version 0.18
 
 =head1 SYNOPSIS
 
