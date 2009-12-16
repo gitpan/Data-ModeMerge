@@ -1,7 +1,5 @@
 package Data::ModeMerge::Config;
-our $VERSION = '0.14';
-
-
+our $VERSION = '0.15';
 # ABSTRACT: Data::ModeMerge configuration
 
 
@@ -70,6 +68,9 @@ has set_prefix => (is => 'rw');
 has readd_prefix => (is => 'rw', default => 1);
 
 
+has premerge_pair_filter => (is => 'rw');
+
+
 has options_key => (is => 'rw', default => '');
 
 
@@ -111,6 +112,7 @@ sub _config_ok {
         include_merge_regex
         set_prefix
         readd_prefix
+        premerge_pair_filter
                   /];
 }
 
@@ -127,7 +129,7 @@ Data::ModeMerge::Config - Data::ModeMerge configuration
 
 =head1 VERSION
 
-version 0.14
+version 0.15
 
 =head1 SYNOPSIS
 
@@ -455,6 +457,24 @@ their stickiness.
 
  mode_merge({"^a"=>1}, {a=>2});                    # {"^a"=>1}
  mode_merge({"^a"=>1}, {a=>2}, {readd_prefix=>0}); # { "a"=>1}
+
+=head2 premerge_pair_filter => CODEREF
+
+Context: config, options key
+
+Default: undef
+
+Pass the key and value of each hash pair to a subroutine before
+merging (and before the keys are stripped for mode prefixes). Will
+push error if there is conflicting key in the hash.
+
+The subroutine should return a list of new key(s) and value(s). If key
+is undef then it means the pair should be discarded. This way, the
+filter is able to add or remove pairs from the hash.
+
+ mode_merge({a=>1}, {"+amok"=>2},
+            {premerge_pair_filter=>sub{ uc(substr($_[0],0,2)), $_[1]*2 }});
+ # {"A"=>6}
 
 =head2 options_key => STR
 

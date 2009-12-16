@@ -1,5 +1,13 @@
 Revision history for Data-ModeMerge
 
+0.15   2009-12-11
+
+       - new config; premerge_pair_filter
+
+       - NORMAL mode can handle CODE refs
+
+       - can merge recursive/circular references (though not all possible cases)
+       
 0.14    2009-12-07
 
         - Minor fix to Makefile.PL

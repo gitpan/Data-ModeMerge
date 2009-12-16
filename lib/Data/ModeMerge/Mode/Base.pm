@@ -1,7 +1,5 @@
 package Data::ModeMerge::Mode::Base;
-our $VERSION = '0.14';
-
-
+our $VERSION = '0.15';
 # ABSTRACT: Base class for Data::ModeMerge mode handler
 
 
@@ -92,9 +90,19 @@ sub merge_ARRAY_ARRAY {
         $mm->path->[-1] = $i;
         if ($i < $la && $i < $lb) {
             push @backup, $l->[$i];
-            my ($newkey, $res2, $backup2) = $mm->_merge($i, $l->[$i], $r->[$i], $c->default_mode);
+            my ($subnewkey, $subres, $subbackup, $is_circular) = $mm->_merge($i, $l->[$i], $r->[$i], $c->default_mode);
             last if @{ $mm->errors };
-            push @res, $res2;# if defined($newkey); = we allow DELETE on array?
+            if ($is_circular) {
+                push @res, undef;
+                #print "DEBUG: pushing todo to mem<".$mm->cur_mem_key.">\n";
+                push @{ $mm->mem->{ $mm->cur_mem_key }{todo} }, sub {
+                    my ($subnewkey, $subres, $subbackup) = @_;
+                    #print "DEBUG: Entering todo subroutine (i=$i)\n";
+                    $res[$i] = $subres;
+                }
+            } else {
+                push @res, $subres;# if defined($newkey); = we allow DELETE on array?
+            }
         } elsif ($i < $la) {
             push @res, $l->[$i];
         } else {
@@ -105,6 +113,32 @@ sub merge_ARRAY_ARRAY {
     ($key, \@res, \@backup);
 }
 
+sub _prefilter_hash {
+    my ($self, $h, $desc, $sub) = @_;
+    my $mm = $self->merger;
+
+    if (ref($sub) ne 'CODE') {
+        $mm->push_error("$desc failed: filter must be a coderef");
+        return;
+    }
+
+    my $res = {};
+    for (keys %$h) {
+        my @r = $sub->($_, $h->{$_});
+        while (my ($k, $v) = splice @r, 0, 2) {
+            next unless defined $k;
+            if (exists $res->{$k}) {
+                $mm->push_error("$desc failed; key conflict: ".
+                                "$_ -> $k, but key $k already exists");
+                return;
+            }
+            $res->{$k} = $v;
+        }
+    }
+        
+    $res;
+}
+
 # turn {[prefix]key => val, ...} into { key => [MODE, val], ...}, push
 # error if there's conflicting key
 sub _gen_left {
@@ -113,6 +147,13 @@ sub _gen_left {
     my $c = $mm->config;
 
     #print "DEBUG: Entering _gen_left(".$mm->_dump($l).", $mode, ep=$ep, ip=$ip, epr=$epr, ipr=$ipr)\n";
+
+    if ($c->premerge_pair_filter) {
+        $l = $self->_prefilter_hash($l, "premerge filter left hash",
+                                    $c->premerge_pair_filter);
+        return if @{ $mm->errors };
+    }
+
     my $hl = {};
     if ($c->parse_prefix) {
         for (keys %$l) {
@@ -144,6 +185,7 @@ sub _gen_left {
             $hl->{$_} = [$mode, $l->{$_}];
         }
     }
+
     #print "DEBUG: Leaving _gen_left, result = ".$mm->_dump($hl)."\n";
     $hl;
 }
@@ -156,6 +198,13 @@ sub _gen_right {
     my $c = $mm->config;
 
     #print "DEBUG: Entering _gen_right(".$mm->_dump($r).", $mode, ep=$ep, ip=$ip, epr=$epr, ipr=$ipr)\n";
+
+    if ($c->premerge_pair_filter) {
+        $r = $self->_prefilter_hash($r, "premerge filter right hash",
+                                    $c->premerge_pair_filter);
+        return if @{ $mm->errors };
+    }
+
     my $hr = {};
     if ($c->parse_prefix) {
         for (keys %$r) {
@@ -199,6 +248,8 @@ sub _merge_gen {
     my $mm = $self->merger;
     my $c = $mm->config;
 
+    #print "DEBUG: Entering _merge_gen(".$mm->_dump($hl).", ".$mm->_dump($hr).", $mode, ...)\n";
+
     my $res = {};
     my $backup = {};
 
@@ -229,6 +280,7 @@ sub _merge_gen {
             push @o, map { [$_, $hr->{$k}{$_}] } sort { $m{$b} <=> $m{$a} } keys %m;
         }
         my $final_mode;
+        my $is_circular;
         my $v;
         #print "DEBUG: k=$k, o=".Data::Dumper->new([\@o])->Indent(0)->Terse(1)->Dump."\n";
         for my $i (0..$#o) {
@@ -242,17 +294,60 @@ sub _merge_gen {
                         return;
                     };
                 #print "DEBUG: merge $final_mode+$o[$i][0] = $m->[0], $m->[1]\n";
-                my ($bakv, $newkey);
-                ($newkey, $v, $bakv) = $mm->_merge($k, $v, $o[$i][1], $m->[0]);
+                my ($subnewkey, $subbackup);
+                ($subnewkey, $v, $subbackup, $is_circular) = $mm->_merge($k, $v, $o[$i][1], $m->[0]);
                 return if @{ $mm->errors };
-                next K unless defined $newkey;
+                if ($is_circular) {
+                    if ($i < $#o) {
+                        $mm->push_error("Can't handle circular at $i of $#o merges (mode $m->[0]): not the last merge");
+                        return;
+                    }
+                    #print "DEBUG: pushing todo to mem<".$mm->cur_mem_key.">\n";
+                    push @{ $mm->mem->{ $mm->cur_mem_key }{todo} }, sub {
+                        my ($subnewkey, $subres, $subbackup) = @_;
+                        #print "DEBUG: Entering todo subroutine (k=$k)\n";
+                        my $final_mode = $m->[1];
+                        #XXX return unless defined($subnewkey);
+                        $res->{$k} = [$m->[1], $subres];
+                        if ($c->readd_prefix) {
+                            # XXX if there is a conflict error in
+                            # _readd_prefix, how to adjust path?
+                            $self->_readd_prefix($res, $k, $c->default_mode);
+                        } else {
+                            $res->{$k} = $res->{$k}[1];
+                        }
+                    };
+                    delete $res->{$k};
+                }
+                next K unless defined $subnewkey;
                 $final_mode = $m->[1];
             }
         }
-        $res->{$k} = [$final_mode, $v];
+        $res->{$k} = [$final_mode, $v] unless $is_circular;
     }
     pop @{ $mm->path };
+    #print "DEBUG: Leaving _merge_gen, res = ".$mm->_dump($res)."\n";
     ($res, $backup);
+}
+
+# hh is {key=>[MODE, val], ...} which is the format returned by _merge_gen
+sub _readd_prefix {
+    my ($self, $hh, $k, $defmode) = @_;
+    my $mm = $self->merger;
+    my $c = $mm->config;
+
+    my $m = $hh->{$k}[0];
+    if ($m eq $defmode) {
+        $hh->{$k} = $hh->{$k}[1];
+    } else {
+        my $kp = $mm->modes->{$m}->add_prefix($k);
+        if (exists $hh->{$kp}) {
+            $mm->push_error("BUG: conflict when re-adding prefix after merge: $kp");
+            return;
+        }
+        $hh->{$kp} = $hh->{$k}[1];
+        delete $hh->{$k};
+    }
 }
 
 sub merge_HASH_HASH {
@@ -281,7 +376,7 @@ sub merge_HASH_HASH {
         my ($res, $backup);
         {
             local $c->{readd_prefix} = 0;
-             ($res, $backup) = $self->_merge_gen($okl, $okr, $mode);
+            ($res, $backup) = $self->_merge_gen($okl, $okr, $mode);
         }
         pop @{ $mm->path };
         return if @{ $mm->errors };
@@ -314,11 +409,11 @@ sub merge_HASH_HASH {
                 $mm->push_error("Configuration not allowed in options key: $_");
                 return;
             }
-            if (!$mm->_in($_, $c->_config_ok)) {
+            if ($_ ne $ok && !$mm->_in($_, $c->_config_ok)) {
                 $mm->push_error("Unknown configuration in options key: $_");
                 return;
             }
-            $c2->$_($res->{$_});
+            $c2->$_($res->{$_}) unless $_ eq $ok;
         }
         $mm->save_config;
         $mm->config($c2);
@@ -420,18 +515,7 @@ sub merge_HASH_HASH {
     # STEP 5. TURN BACK {key=>[MODE=>val]}, ...} INTO {(prefix)key => val, ...}
     if ($c->readd_prefix) {
         for my $k (keys %$res) {
-            my $m = $res->{$k}[0];
-            if ($m eq $c->default_mode) {
-                $res->{$k} = $res->{$k}[1];
-            } else {
-                my $kp = $mm->modes->{$m}->add_prefix($k);
-                if (exists $res->{$kp}) {
-                    $mm->push_error("BUG: conflict when re-adding prefix after merge: $kp");
-                    return;
-                }
-                $res->{$kp} = $res->{$k}[1];
-                delete $res->{$k};
-            }
+            $self->_readd_prefix($res, $k, $c->default_mode);
         }
     } else {
         $res->{$_} = $res->{$_}[1] for keys %$res;
@@ -457,7 +541,7 @@ Data::ModeMerge::Mode::Base - Base class for Data::ModeMerge mode handler
 
 =head1 VERSION
 
-version 0.14
+version 0.15
 
 =head1 SYNOPSIS
 

@@ -1,7 +1,5 @@
 package Data::ModeMerge::Mode::NORMAL;
-our $VERSION = '0.14';
-
-
+our $VERSION = '0.15';
 # ABSTRACT: Handler for Data::ModeMerge NORMAL merge mode
 
 
@@ -31,6 +29,11 @@ sub merge_SCALAR_HASH {
     ($key, $r);
 }
 
+sub merge_SCALAR_CODE {
+    my ($self, $key, $l, $r) = @_;
+    ($key, $r);
+}
+
 sub merge_ARRAY_SCALAR {
     my ($self, $key, $l, $r) = @_;
     ($key, $r);
@@ -41,12 +44,42 @@ sub merge_ARRAY_HASH {
     ($key, $r);
 }
 
+sub merge_ARRAY_CODE {
+    my ($self, $key, $l, $r) = @_;
+    ($key, $r);
+}
+
 sub merge_HASH_SCALAR {
     my ($self, $key, $l, $r) = @_;
     ($key, $r);
 }
 
 sub merge_HASH_ARRAY {
+    my ($self, $key, $l, $r) = @_;
+    ($key, $r);
+}
+
+sub merge_HASH_CODE {
+    my ($self, $key, $l, $r) = @_;
+    ($key, $r);
+}
+
+sub merge_CODE_SCALAR {
+    my ($self, $key, $l, $r) = @_;
+    ($key, $r);
+}
+
+sub merge_CODE_ARRAY {
+    my ($self, $key, $l, $r) = @_;
+    ($key, $r);
+}
+
+sub merge_CODE_HASH {
+    my ($self, $key, $l, $r) = @_;
+    ($key, $r);
+}
+
+sub merge_CODE_CODE {
     my ($self, $key, $l, $r) = @_;
     ($key, $r);
 }
@@ -64,7 +97,7 @@ Data::ModeMerge::Mode::NORMAL - Handler for Data::ModeMerge NORMAL merge mode
 
 =head1 VERSION
 
-version 0.14
+version 0.15
 
 =head1 SYNOPSIS
 

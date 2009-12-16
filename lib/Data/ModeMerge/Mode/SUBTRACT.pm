@@ -1,7 +1,5 @@
 package Data::ModeMerge::Mode::SUBTRACT;
-our $VERSION = '0.14';
-
-
+our $VERSION = '0.15';
 # ABSTRACT: Handler for Data::ModeMerge SUBTRACT merge mode
 
 
@@ -89,7 +87,7 @@ Data::ModeMerge::Mode::SUBTRACT - Handler for Data::ModeMerge SUBTRACT merge mod
 
 =head1 VERSION
 
-version 0.14
+version 0.15
 
 =head1 SYNOPSIS
 

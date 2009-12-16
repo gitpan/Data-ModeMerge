@@ -1,7 +1,5 @@
 package Data::ModeMerge;
-our $VERSION = '0.14';
-
-
+our $VERSION = '0.15';
 # ABSTRACT: Merge two nested data structures, with merging modes and options
 
 
@@ -34,6 +32,8 @@ has combine_rules => (is => 'rw');
 # merging process state
 has path => (is => "rw", default => sub { [] });
 has errors => (is => "rw", default => sub { [] });
+has mem => (is => "rw", default => sub { {} }); # for handling circular refs. {key=>{res=>[...], todo=>[sub1, ...]}, ...}
+has cur_mem_key => (is => "rw"); # for handling circular refs. instead of passing around this as argument, we put it here.
 
 
 sub _dump {
@@ -250,6 +250,8 @@ sub merge {
     $self->config_stack([]);
     $self->path([]);
     $self->errors([]);
+    $self->mem({});
+    $self->cur_mem_key(undef);
     my ($key, $res, $backup) = $self->_merge(undef, $l, $r);
     {
         success => !@{ $self->errors },
@@ -262,6 +264,24 @@ sub merge {
     };
 }
 
+# handle circular refs: process todo's
+sub _process_todo {
+    my ($self) = @_;
+    if ($self->cur_mem_key) {
+        for my $mk (keys %{ $self->mem }) {
+            my $res = $self->mem->{$mk}{res};
+            if (defined($res) && @{ $self->mem->{$mk}{todo} }) {
+                #print "DEBUG: processing todo for mem<$mk>\n";
+                for (@{  $self->mem->{$mk}{todo} }) {
+                    $_->(@$res);
+                    return if @{ $self->errors };
+                }
+                $self->mem->{$mk}{todo} = [];
+            }
+        }
+    }
+}
+
 sub _merge {
     my ($self, $key, $l, $r, $mode) = @_;
     my $c = $self->config;
@@ -271,27 +291,65 @@ sub _merge {
     die "Can't find handler for mode $mode" unless $mh;
 
     # determine which merge method we will call
-    my $ra = ref($l);
-    my $rb = ref($r);
-    my $ta = $ra eq 'HASH' ? 'HASH' : $ra eq 'ARRAY' ? 'ARRAY' : !$ra ? 'SCALAR' : '';
-    my $tb = $rb eq 'HASH' ? 'HASH' : $rb eq 'ARRAY' ? 'ARRAY' : !$rb ? 'SCALAR' : '';
-    if (!$ta) { $self->push_error("Unknown type in left side: $ta"); return }
-    if (!$tb) { $self->push_error("Unknown type in right side: $tb"); return }
-    if (!$c->allow_create_array && $ta ne 'ARRAY' && $tb eq 'ARRAY') {
+    my $rl = ref($l);
+    my $rr = ref($r);
+    my $tl = $rl eq 'HASH' ? 'HASH' : $rl eq 'ARRAY' ? 'ARRAY' : $rl eq 'CODE' ? 'CODE' : !$rl ? 'SCALAR' : '';
+    my $tr = $rr eq 'HASH' ? 'HASH' : $rr eq 'ARRAY' ? 'ARRAY' : $rr eq 'CODE' ? 'CODE' : !$rr ? 'SCALAR' : '';
+    if (!$tl) { $self->push_error("Unknown type in left side: $rl"); return }
+    if (!$tr) { $self->push_error("Unknown type in right side: $rr"); return }
+    if (!$c->allow_create_array && $tl ne 'ARRAY' && $tr eq 'ARRAY') {
         $self->push_error("Not allowed to create array"); return;
     }
-    if (!$c->allow_create_hash && $ta ne 'HASH' && $tb eq 'HASH') {
+    if (!$c->allow_create_hash && $tl ne 'HASH' && $tr eq 'HASH') {
         $self->push_error("Not allowed to create hash"); return;
     }
-    if (!$c->allow_destroy_array && $ta eq 'ARRAY' && $tb ne 'ARRAY') {
+    if (!$c->allow_destroy_array && $tl eq 'ARRAY' && $tr ne 'ARRAY') {
         $self->push_error("Not allowed to destroy array"); return;
     }
-    if (!$c->allow_destroy_hash && $ta eq 'HASH' && $tb ne 'HASH') {
+    if (!$c->allow_destroy_hash && $tl eq 'HASH' && $tr ne 'HASH') {
         $self->push_error("Not allowed to destroy hash"); return;
     }
-    my $meth = "merge_${ta}_${tb}";
-    if ($self->can($meth)) { $self->push_error("No merge method found for $ta + $tb (mode $mode)"); return }
-    $mh->$meth($key, $l, $r);
+    my $meth = "merge_${tl}_${tr}";
+    if (!$mh->can($meth)) { $self->push_error("No merge method found for $tl + $tr (mode $mode)"); return }
+
+    #$self->_process_todo;
+    # handle circular refs: add to todo if necessary
+    my $memkey;
+    if ($rl || $rr) {
+        $memkey = sprintf "%s%s %s%s %s %s",
+            (defined($l) ? ($rl ? 2 : 1) : 0),
+            (defined($l) ? "$l" : ''),
+            (defined($r) ? ($rr ? 2 : 1) : 0),
+            (defined($r) ? "$r" : ''),
+            $mode,
+            $self->config;
+        #print "DEBUG: number of keys in mem = ".scalar(keys %{ $self->mem })."\n";
+        #print "DEBUG: mem keys = \n".join("", map { "  $_\n" } keys %{ $self->mem }) if keys %{ $self->mem };
+        #print "DEBUG: calculating memkey = <$memkey>\n";
+    }
+    if ($memkey) {
+        if (exists $self->mem->{$memkey}) {
+            $self->_process_todo;
+            if (defined $self->mem->{$memkey}{res}) {
+                #print "DEBUG: already calculated, using cached result\n";
+                return @{ $self->mem->{$memkey}{res} };
+            } else {
+                #print "DEBUG: detecting circular\n";
+                return ($key, undef, undef, 1);
+            }
+        } else {
+            $self->mem->{$memkey} = {res=>undef, todo=>[]};
+            $self->cur_mem_key($memkey);
+            my ($newkey, $res, $backup) = $mh->$meth($key, $l, $r);
+            #print "DEBUG: setting res for mem<$memkey>\n";
+            $self->mem->{$memkey}{res} = [$newkey, $res, $backup];
+            $self->_process_todo;
+            return ($newkey, $res, $backup);
+        }
+    } else {
+        $self->_process_todo;
+        return $mh->$meth($key, $l, $r);
+    }
 }
 
 # returns 1 if a is included in b (e.g. [user => "steven"] in included in [user
@@ -319,7 +377,7 @@ Data::ModeMerge - Merge two nested data structures, with merging modes and optio
 
 =head1 VERSION
 
-version 0.14
+version 0.15
 
 =head1 SYNOPSIS
 
@@ -439,6 +497,9 @@ You can change default mode, prefixes, disable/enable modes, etc on a
 per-hash basis using the so-called B<options key>. See the B<OPTIONS
 KEY> section for more details.
 
+This module can handle merging circular/recursive references (though
+not all cases can be handled).
+
 =head1 MERGING PREFIXES AND YOUR DATA
 
 Merging with this module means you need to be careful when your hash
@@ -525,11 +586,19 @@ right side hash.
 Multiple prefixes on the right side is allowed, where the merging will
 be done by precedence level (highest first):
 
- mode_merge({a=>[1,2]}, {'-a'=>[1], '+a'=>[10]}, {a=>3}); # error!
+ mode_merge({a=>[1,2]}, {'-a'=>[1], '+a'=>[10]}); # {a=>[2,10]}
 
 but not on the left side:
 
  mode_merge({a=>1, '^a'=>2}, {a=>3}); # error!
+
+Precedence levels (from highest to lowest):
+
+ KEEP
+ NORMAL
+ SUBTRACT
+ CONCAT ADD
+ DELETE
 
 =head1 FUNCTIONS
 
@@ -545,6 +614,8 @@ method for more details.
 A hashref for config. See L<Data::ModeMerge::Config>.
 
 =head1 METHODS
+
+For normal use, you will normally only need to use merge().
 
 =head2 push_error($errmsg)
 
@@ -606,12 +677,10 @@ Let's say you want to add a mode named C<FOO>. It will have the prefix
 Create the mode handler class,
 e.g. C<Data::ModeMerge::Mode::FOO>. It's probably best to subclass
 from L<Data::ModeMerge::Mode::Base>. The class must implement name(),
-precedence_level(), and
-merge_{SCALAR,ARRAY,HASH}_{SCALAR,ARRAY,HASH}(). If you subclass from
-Base, you'll only need to set prefix to '?' and prefix_re to qr/^\?/
-in your BUILD, otherwise you'll need to implement your own
-add_prefix() and remove_prefix(). See example in Base.pm and one of
-the modes (e.g. NORMAL.pm).
+precedence_level(), default_prefix(), default_prefix_re(), and
+merge_{SCALAR,ARRAY,HASH}_{SCALAR,ARRAY,HASH}(). For more details, see
+the source code of Base.pm and one of the mode handlers
+(e.g. NORMAL.pm).
 
 To use the mode, register it:
 

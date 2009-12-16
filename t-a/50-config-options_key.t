@@ -2,10 +2,10 @@
 
 use strict;
 use warnings;
-use Test::More tests => 68;
+use Test::More tests => 70;
 
 use lib './t';
-require 'testlib.pm';
+do 'testlib.pm';
 
 use Data::ModeMerge;
 
@@ -85,4 +85,12 @@ for (
     }
 }
 
-# XXX recursive
+merge_is({h=>{  i =>1, ""=>{parse_prefix=>1}},   i =>1, h2=>{  i =>1}, ''=>{parse_prefix=>0}},
+         {h=>{"+i"=>2                       }, "+i"=>2, h2=>{"+i"=>2}                       },
+         {h=>{  i =>3}, i=>1, "+i"=>2, h2=>{i=>1, "+i"=>2}},
+         'ok works for subhashes, and can be overriden by subhash');
+
+merge_is({i=>1   , ""=>{PARSE_PREFIX=>0, ""=>{}}},
+         {"+i"=>2, ""=>{                 ""=>{premerge_pair_filter=>sub{lc($_[0]), $_[1]} }}},
+         {i=>1, "+i"=>2},
+         'ok inside ok');

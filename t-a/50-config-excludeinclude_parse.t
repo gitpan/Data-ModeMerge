@@ -5,7 +5,7 @@ use warnings;
 use Test::More tests => 19;
 
 use lib './t';
-require 'testlib.pm';
+do 'testlib.pm';
 
 use Data::ModeMerge;
 

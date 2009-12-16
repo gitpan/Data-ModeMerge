@@ -2,10 +2,10 @@
 
 use strict;
 use warnings;
-use Test::More tests => 25;
+use Test::More tests => 32;
 
 use lib './t';
-require 'testlib.pm';
+do 'testlib.pm';
 
 use Data::ModeMerge;
 
@@ -53,3 +53,13 @@ merge_is({a=>3}, {"-a"=>7, "+a"=>12}, {a=>8}, 'order: - before + 1');
 merge_is({a=>[1,2,3]}, {"-a"=>[1], "+a"=>[1]}, {a=>[2,3,1]}, 'order: - before + 2');
 
 merge_is({'*a'=>1}, {a=>2}, {a=>2}, 'normal prefix on the left');
+
+my $sub = sub {};
+my $sub2 = sub { 1 };
+merge_is(1 , $sub, $sub, 'scalar+code');
+merge_is([], $sub, $sub, 'array+code');
+merge_is({}, $sub, $sub, 'hash+code');
+merge_is($sub2, $sub, $sub, 'code+code');
+merge_is($sub, 1, 1, 'code+scalar');
+merge_is($sub, [], [], 'code+scalar');
+merge_is($sub, {}, {}, 'code+scalar');
