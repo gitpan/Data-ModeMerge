@@ -1,5 +1,9 @@
 Revision history for Data-ModeMerge
 
+0.20   2009-12-15
+
+       - use Regexp::Copy
+
 0.19   2009-12-14
 
        - fix copy-paste bug

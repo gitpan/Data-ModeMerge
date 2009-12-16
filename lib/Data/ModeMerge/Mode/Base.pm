@@ -1,10 +1,11 @@
 package Data::ModeMerge::Mode::Base;
-our $VERSION = '0.19';
+our $VERSION = '0.20';
 # ABSTRACT: Base class for Data::ModeMerge mode handler
 
 
 use Moose;
 use Storable qw/dclone/;
+use Regexp::Copy;
 
 
 has merger => (is => 'rw');
@@ -576,7 +577,7 @@ Data::ModeMerge::Mode::Base - Base class for Data::ModeMerge mode handler
 
 =head1 VERSION
 
-version 0.19
+version 0.20
 
 =head1 SYNOPSIS
 

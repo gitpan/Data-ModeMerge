@@ -11,9 +11,10 @@ name: Data-ModeMerge
 requires:
   Moose: 0
   Pod::Coverage: 0.18
+  Regexp::Copy: 0
   Storable: 0
   Test::Aggregate: 0
   Test::More: 0
   Test::Pod::Coverage: 1.08
   perl: 5.010000
-version: 0.19
+version: 0.20

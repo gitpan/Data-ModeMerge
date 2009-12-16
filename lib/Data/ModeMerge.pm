@@ -1,5 +1,5 @@
 package Data::ModeMerge;
-our $VERSION = '0.19';
+our $VERSION = '0.20';
 # ABSTRACT: Merge two nested data structures, with merging modes and options
 
 
@@ -7,6 +7,7 @@ use Moose;
 use Data::ModeMerge::Config;
 use Data::Dumper;
 use Storable qw/freeze/;
+use Regexp::Copy;
 require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT = qw(mode_merge);
@@ -379,7 +380,7 @@ Data::ModeMerge - Merge two nested data structures, with merging modes and optio
 
 =head1 VERSION
 
-version 0.19
+version 0.20
 
 =head1 SYNOPSIS
 

@@ -1,5 +1,5 @@
 package Data::ModeMerge::Mode::KEEP;
-our $VERSION = '0.19';
+our $VERSION = '0.20';
 # ABSTRACT: Handler for Data::ModeMerge KEEP merge mode
 
 
@@ -72,7 +72,7 @@ Data::ModeMerge::Mode::KEEP - Handler for Data::ModeMerge KEEP merge mode
 
 =head1 VERSION
 
-version 0.19
+version 0.20
 
 =head1 SYNOPSIS
 

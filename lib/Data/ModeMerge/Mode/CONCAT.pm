@@ -1,5 +1,5 @@
 package Data::ModeMerge::Mode::CONCAT;
-our $VERSION = '0.19';
+our $VERSION = '0.20';
 # ABSTRACT: Handler for Data::ModeMerge CONCAT merge mode
 
 
@@ -32,7 +32,7 @@ Data::ModeMerge::Mode::CONCAT - Handler for Data::ModeMerge CONCAT merge mode
 
 =head1 VERSION
 
-version 0.19
+version 0.20
 
 =head1 SYNOPSIS
 
