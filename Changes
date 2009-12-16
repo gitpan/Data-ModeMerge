@@ -1,5 +1,9 @@
 Revision history for Data-ModeMerge
 
+0.19   2009-12-14
+
+       - fix copy-paste bug
+
 0.18   2009-12-12
 
        - bug fix: custom prefix_re got reset in hash merge

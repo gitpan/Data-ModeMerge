@@ -1,5 +1,5 @@
 package Data::ModeMerge;
-our $VERSION = '0.18';
+our $VERSION = '0.19';
 # ABSTRACT: Merge two nested data structures, with merging modes and options
 
 
@@ -22,14 +22,13 @@ sub mode_merge {
 
 has config => (is => "rw");
 
-has config_stack => (is => "rw");
-
 # hash of modename => handler
 has modes => (is => 'rw', default => sub { {} });
 
 has combine_rules => (is => 'rw');
 
 # merging process state
+has config_stack => (is => "rw");
 has path => (is => "rw", default => sub { [] });
 has errors => (is => "rw", default => sub { [] });
 has mem => (is => "rw", default => sub { {} }); # for handling circular refs. {key=>{res=>[...], todo=>[sub1, ...]}, ...}
@@ -171,10 +170,11 @@ sub check_prefix {
 sub check_prefix_on_hash {
     my ($self, $hash) = @_;
     die "Not a hash" unless ref($hash) eq 'HASH';
+    my $res = 0;
     for (keys %$hash) {
-	return 1 if $self->check_prefix($_);
+	do { $res++; last } if $self->check_prefix($_);
     }
-    0;
+    $res;
 }
 
 
@@ -379,44 +379,41 @@ Data::ModeMerge - Merge two nested data structures, with merging modes and optio
 
 =head1 VERSION
 
-version 0.18
+version 0.19
 
 =head1 SYNOPSIS
 
     use Data::ModeMerge;
 
-
-    # OO interface
-
-    my $mm = Data::ModeMerge->new();
-
-    # setting config
-    $mm->config->allow_destroy_hash(0);
-
     my $hash1 = { a=>1,    c=>1, d=>{  da =>[1]} };
     my $hash2 = { a=>2, "-c"=>2, d=>{"+da"=>[2]} };
 
-    # doing merge
-    my $res = $mm->merge($hash1, $hash2);
 
+    # if you want Data::ModeMerge to behave like many other merging
+    # modules (e.g. Hash::Merge or Data::Merger), turn off modes
+    # (prefix) parsing and options key parsing.
+
+    my $mm = new Data::ModeMerge(config => {parse_prefix=>0, options_key=>undef});
+    my $res = $mm->merge($hash1, $hash2);
     die $res->{error} if $res->{error};
-    print $res->{result}; # { a=>2, c=>-1, d => { da=>[1,2] } }
+    # $res->{result} -> { a=>2, c=>1, "-c"=>2, d=>{da=>[1], "+da"=>[2]} }
+
+
+    # otherwise Data::ModeMerge will parse prefix as well as options
+    # key
+
+    my $res = $mm->merge($hash1, $hash2);
+    die $res->{error} if $res->{error};
+    # $res->{result} -> { a=>2, c=>-1, d=>{da=>[1,2]} }
+
+    $res = $merge({  a =>1, {  a2 =>1, ""=>{parse_prefix=>0}},
+                  {".a"=>2, {".a2"=>2                       }});
+    # $res->{result} -> { a=>12, {a2=>1, ".a2"=>2} }, parse_prefix is turned off in just the subhash
 
 
     # procedural interface
 
-    # doing merge (with optional custom config)
     my $res = mode_merge($hash1, $hash2, {allow_destroy_hash=>0});
-
-    die $res->{error} if $res->{error};
-    print $res->{result}; # { a=>2, c=>-1, d => { da=>[1,2] } }
-
-
-    # plain ol' recursive merging, without modes/options (not unlike
-    # Hash::Merge or Data::Merger)
-
-    my $mm = new Data::ModeMerge(config => {parse_prefix=>0, options_key=>undef});
-    my $res = $mm->merge($hash1, $hash2);
 
 =head1 DESCRIPTION
 
@@ -478,7 +475,7 @@ is possible via the KEEP mode merging.
 
 will result in:
 
- {bar=>2, baz=>1, quux=>7}
+ {"^bar"=>2, "^baz"=>1, quux=>7}
 
 effectively protecting C<bar> and C<baz> from being
 overriden/deleted/etc.
@@ -506,8 +503,8 @@ You can change default mode, prefixes, disable/enable modes, etc on a
 per-hash basis using the so-called B<options key>. See the B<OPTIONS
 KEY> section for more details.
 
-This module can handle merging circular/recursive references (though
-not all cases can be handled).
+This module can handle (though not all possible cases)
+circular/recursive references.
 
 =head1 MERGING PREFIXES AND YOUR DATA
 

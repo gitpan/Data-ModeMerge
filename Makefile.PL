@@ -11,7 +11,7 @@ WriteMakefile(
   NAME      => 'Data::ModeMerge',
   AUTHOR    => "Steven\ Haryanto\ \<stevenharyanto\@gmail\.com\>",
   ABSTRACT  => "Merge\ two\ nested\ data\ structures\,\ with\ merging\ modes\ and\ options",
-  VERSION   => '0.18',
+  VERSION   => '0.19',
   EXE_FILES => [ qw() ],
   (eval { ExtUtils::MakeMaker->VERSION(6.31) } ? (LICENSE => 'perl') : ()),
   PREREQ_PM    => {

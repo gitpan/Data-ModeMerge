@@ -1,5 +1,5 @@
 package Data::ModeMerge::Mode::Base;
-our $VERSION = '0.18';
+our $VERSION = '0.19';
 # ABSTRACT: Base class for Data::ModeMerge mode handler
 
 
@@ -549,9 +549,9 @@ sub merge_HASH_HASH {
             my $mh = $mm->modes->{$_};
             my $s = $saved_prefixes->{$_};
             $mh->prefix($s->{prefix});
-            $mh->prefix_re($s->{prefix});
-            $mh->check_prefix_sub($s->{prefix});
-            $mh->add_prefix_sub($s->{prefix});
+            $mh->prefix_re($s->{prefix_re});
+            $mh->check_prefix_sub($s->{check_prefix_sub});
+            $mh->add_prefix_sub($s->{add_prefix_sub});
             $mh->remove_prefix_sub($s->{remove_prefix_sub});
         }
     }
@@ -576,7 +576,7 @@ Data::ModeMerge::Mode::Base - Base class for Data::ModeMerge mode handler
 
 =head1 VERSION
 
-version 0.18
+version 0.19
 
 =head1 SYNOPSIS
 
