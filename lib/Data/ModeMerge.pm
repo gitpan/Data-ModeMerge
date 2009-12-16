@@ -1,5 +1,5 @@
 package Data::ModeMerge;
-our $VERSION = '0.16';
+our $VERSION = '0.17';
 # ABSTRACT: Merge two nested data structures, with merging modes and options
 
 
@@ -377,7 +377,7 @@ Data::ModeMerge - Merge two nested data structures, with merging modes and optio
 
 =head1 VERSION
 
-version 0.16
+version 0.17
 
 =head1 SYNOPSIS
 
@@ -572,8 +572,8 @@ See L<Data::ModeMerge::Config> for more details about options key.
 
 =head2 NORMAL (optional '*' prefix on left/right side)
 
- mode_merge({ a=>11, b=>12},  {b=>22, c=>23}); # {a=>11, b=>22, c=>23}
- mode_merge({*a=>11, b=>12}, {*b=>22, c=>23}); # {a=>11, b=>22, c=>23}
+ mode_merge({  a =>11, b=>12}, {  b =>22, c=>23}); # {a=>11, b=>22, c=>23}
+ mode_merge({"*a"=>11, b=>12}, {"*b"=>22, c=>23}); # {a=>11, b=>22, c=>23}
 
 =head2 ADD ('+' prefix on the right side)
 
@@ -593,7 +593,19 @@ Concative merge on arrays will be treated like additive merge.
  mode_merge({i=>3}, {"-i"=>4}); # {i=>-1}
  mode_merge({a=>["a","b","c"]}, {"-a"=>["b"]}); # {a=>["a","c"]}
 
-Subtractive merge on hashes is not defined.
+Subtractive merge on hashes behaves like a normal merge, except that
+each key on the right-side hash without any prefix will be assumed to
+have a DELETE prefix, i.e.:
+
+ mode_merge({h=>{a=>1, b=>1}}, {-h=>{a=>2, "+b"=>2, c=>2}})
+
+is equivalent to:
+
+ mode_merge({h=>{a=>1, b=>1}}, {h=>{"!a"=>2, "+b"=>2, "!c"=>2}})
+
+and will merge to become:
+
+ {b=>3}
 
 =head2 DELETE ('!' prefix on the right side)
 

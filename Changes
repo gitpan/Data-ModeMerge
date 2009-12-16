@@ -1,5 +1,19 @@
 Revision history for Data-ModeMerge
 
+0.17   2009-12-12
+
+       - INCOMPATIBLE BEHAVIOUR CHANGE: SUBTRACT merge on two hashes
+         is now defined as a NORMAL merge, except that all keys on the
+         right-side hash which do not have a merge prefix will be
+         assumed to have a DELETE prefix. This means the SUBTRACT mode
+         can now grok mode prefix and options key too.
+
+       - INCOMPATIBLE BEHAVIOUR CHANGE: merging hash keys with DELETE
+         mode now will make the key disappear even if there is no
+         corresponding left or right side. merge({}, {"!a"=>1}) and
+         merge({"!a"=>1}, {}) used to be {"!a"=>1} but now will be
+         {}. I believe this is more intuitive/expected.
+
 0.16   2009-12-11
 
        - some work on doc

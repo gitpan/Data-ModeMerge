@@ -1,5 +1,5 @@
 package Data::ModeMerge::Mode::Base;
-our $VERSION = '0.16';
+our $VERSION = '0.17';
 # ABSTRACT: Base class for Data::ModeMerge mode handler
 
 
@@ -270,11 +270,11 @@ sub _merge_gen {
             next K;
         }
 
-        $backup->{$k} = $hl->{$k}[1] if exists($hl->{$k}) && exists($hr->{$k});
-        if (exists $hl->{$k}) {
+        $backup->{$k} = $hl->{$k}[1] if $hl->{$k} && $hr->{$k};
+        if ($hl->{$k}) {
             push @o, $hl->{$k};
         }
-        if (exists $hr->{$k}) {
+        if ($hr->{$k}) {
             my %m = map {$_=>$mm->modes->{$_}->precedence_level} keys %{ $hr->{$k} };
             #print "DEBUG: \\%m=".Data::Dumper->new([\%m])->Indent(0)->Terse(1)->Dump."\n";
             push @o, map { [$_, $hr->{$k}{$_}] } sort { $m{$b} <=> $m{$a} } keys %m;
@@ -285,8 +285,20 @@ sub _merge_gen {
         #print "DEBUG: k=$k, o=".Data::Dumper->new([\@o])->Indent(0)->Terse(1)->Dump."\n";
         for my $i (0..$#o) {
             if ($i == 0) {
-                $final_mode = $o[$i][0];
-                $v = $o[$i][1];
+                my $mh = $mm->modes->{$o[$i][0]};
+                if (@o == 1 &&
+                        (($hl->{$k} && $mh->can("merge_left_only")) ||
+                         ($hr->{$k} && $mh->can("merge_right_only")))) {
+                    # there's only left-side or right-side
+                    my $meth = $hl->{$k} ? "merge_left_only" : "merge_right_only";
+                    my ($subnewkey, $v, $subbackup, $is_circular, $newmode) = $mh->$meth($k, $o[$i][1]); # XXX handle circular?
+                    next K unless defined($subnewkey);
+                    $final_mode = $newmode;
+                    $v = $res;
+                } else {
+                    $final_mode = $o[$i][0];
+                    $v = $o[$i][1];
+                }
             } else {
                 my $m = $mm->combine_rules->{"$final_mode+$o[$i][0]"}
                     or do {
@@ -541,7 +553,7 @@ Data::ModeMerge::Mode::Base - Base class for Data::ModeMerge mode handler
 
 =head1 VERSION
 
-version 0.16
+version 0.17
 
 =head1 SYNOPSIS
 

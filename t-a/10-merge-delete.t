@@ -2,12 +2,15 @@
 
 use strict;
 use warnings;
-use Test::More tests => 13;
+use Test::More tests => 15;
 
 use lib './t';
 do 'testlib.pm';
 
 use Data::ModeMerge;
+
+merge_is({"!a"=>undef}, {}, {}, 'left side only');
+merge_is({}, {"!a"=>undef}, {}, 'right side only');
 
 merge_is({a=>1}, {"!a"=>undef}, {}, 'scalar-scalar');
 merge_is({a=>1}, {"!a"=>1    }, {}, 'scalar-scalar 2');

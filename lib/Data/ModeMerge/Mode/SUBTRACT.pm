@@ -1,5 +1,5 @@
 package Data::ModeMerge::Mode::SUBTRACT;
-our $VERSION = '0.16';
+our $VERSION = '0.17';
 # ABSTRACT: Handler for Data::ModeMerge SUBTRACT merge mode
 
 
@@ -67,11 +67,20 @@ sub merge_HASH_ARRAY {
 
 sub merge_HASH_HASH {
     my ($self, $key, $l, $r) = @_;
+    my $mm = $self->merger;
+
     my %res;
-    for (keys %$l) {
-        $res{$_} = $l->{$_} unless exists($r->{$_});
+    my $r2 = {};
+    for (keys %$r) {
+        my $k = $mm->check_prefix($_) ? $_ : $mm->add_prefix($_, 'DELETE');
+        if ($k ne $_ && exists($r->{$k})) {
+            $mm->push_error("Conflict when adding DELETE prefix on right-side hash key $_ ".
+                            "for SUBTRACT merge: key $k already exists");
+            return;
+        }
+        $r2->{$k} = $r->{$_};
     }
-    ($key, \%res);
+    $mm->_merge($key, $l, $r2, 'NORMAL');
 }
 
 __PACKAGE__->meta->make_immutable;
@@ -87,7 +96,7 @@ Data::ModeMerge::Mode::SUBTRACT - Handler for Data::ModeMerge SUBTRACT merge mod
 
 =head1 VERSION
 
-version 0.16
+version 0.17
 
 =head1 SYNOPSIS
 

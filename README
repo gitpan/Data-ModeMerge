@@ -3,7 +3,7 @@ NAME
     and options
 
 VERSION
-    version 0.16
+    version 0.17
 
 SYNOPSIS
         use Data::ModeMerge;
@@ -182,8 +182,8 @@ OPTIONS KEY
 
 MERGING MODES
   NORMAL (optional '*' prefix on left/right side)
-     mode_merge({ a=>11, b=>12},  {b=>22, c=>23}); # {a=>11, b=>22, c=>23}
-     mode_merge({*a=>11, b=>12}, {*b=>22, c=>23}); # {a=>11, b=>22, c=>23}
+     mode_merge({  a =>11, b=>12}, {  b =>22, c=>23}); # {a=>11, b=>22, c=>23}
+     mode_merge({"*a"=>11, b=>12}, {"*b"=>22, c=>23}); # {a=>11, b=>22, c=>23}
 
   ADD ('+' prefix on the right side)
      mode_merge({i=>3}, {"+i"=>4, "+j"=>1}); # {i=>7, j=>1}
@@ -200,7 +200,19 @@ MERGING MODES
      mode_merge({i=>3}, {"-i"=>4}); # {i=>-1}
      mode_merge({a=>["a","b","c"]}, {"-a"=>["b"]}); # {a=>["a","c"]}
 
-    Subtractive merge on hashes is not defined.
+    Subtractive merge on hashes behaves like a normal merge, except that
+    each key on the right-side hash without any prefix will be assumed to
+    have a DELETE prefix, i.e.:
+
+     mode_merge({h=>{a=>1, b=>1}}, {-h=>{a=>2, "+b"=>2, c=>2}})
+
+    is equivalent to:
+
+     mode_merge({h=>{a=>1, b=>1}}, {h=>{"!a"=>2, "+b"=>2, "!c"=>2}})
+
+    and will merge to become:
+
+     {b=>3}
 
   DELETE ('!' prefix on the right side)
      mode_merge({x=>WHATEVER}, {"!x"=>WHATEVER}); # {}

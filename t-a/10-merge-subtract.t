@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::More tests => 12;
+use Test::More tests => 13;
 
 use lib './t';
 do 'testlib.pm';
@@ -19,6 +19,7 @@ merge_fail({a=>[1]}, {"-a"=>{}}, 'array 4');
 merge_fail({a=>{}}, {"-a"=>[2]}, 'array 5');
 
 merge_is({h=>{a=>1}}, {"-h"=>{a=>undef}}, {h=>{}}, 'hash 1');
+merge_is({h=>{a=>1, b=>1}}, {"-h"=>{a=>2, "+b"=>2, c=>2}}, {h=>{b=>3}}, 'hash 1b');
 merge_fail({h=>{}}, {"-h"=>1}, 'hash 2');
 merge_fail({h=>1}, {"-h"=>{}}, 'hash 3');
 merge_fail({h=>{}}, {"-h"=>[]}, 'hash 4');
