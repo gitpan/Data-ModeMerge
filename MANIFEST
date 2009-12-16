@@ -21,6 +21,7 @@ t-a/01-mode-keep.t
 t-a/01-mode-normal.t
 t-a/01-mode-subtract.t
 t-a/02-backup.t
+t-a/03-method-_in.t
 t-a/03-method-add_prefix.t
 t-a/03-method-check_prefix.t
 t-a/03-method-remove_prefix.t

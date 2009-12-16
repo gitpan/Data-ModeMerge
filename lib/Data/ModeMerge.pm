@@ -1,13 +1,11 @@
 package Data::ModeMerge;
-our $VERSION = '0.20';
+our $VERSION = '0.21';
 # ABSTRACT: Merge two nested data structures, with merging modes and options
 
 
 use Moose;
 use Data::ModeMerge::Config;
 use Data::Dumper;
-use Storable qw/freeze/;
-use Regexp::Copy;
 require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT = qw(mode_merge);
@@ -43,12 +41,13 @@ sub _dump {
 
 sub _in($$) {
     my ($self, $needle, $haystack) = @_;
+    return 0 unless defined($needle);
     my $r1 = ref($needle);
-    my $f1 = $r1 ? freeze($needle) : undef;
+    my $f1 = $r1 ? $self->_dump($needle) : undef;
     for (@$haystack) {
         my $r2 = ref($_);
         next if $r1 xor $r2;
-        return 1 if  $r2 && $f1 eq freeze($_);
+        return 1 if  $r2 && $f1 eq $self->_dump($_);
         return 1 if !$r2 && $needle eq $_;
     }
     0;
@@ -380,7 +379,7 @@ Data::ModeMerge - Merge two nested data structures, with merging modes and optio
 
 =head1 VERSION
 
-version 0.20
+version 0.21
 
 =head1 SYNOPSIS
 

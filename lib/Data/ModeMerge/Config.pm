@@ -1,5 +1,5 @@
 package Data::ModeMerge::Config;
-our $VERSION = '0.20';
+our $VERSION = '0.21';
 # ABSTRACT: Data::ModeMerge configuration
 
 
@@ -129,7 +129,7 @@ Data::ModeMerge::Config - Data::ModeMerge configuration
 
 =head1 VERSION
 
-version 0.20
+version 0.21
 
 =head1 SYNOPSIS
 

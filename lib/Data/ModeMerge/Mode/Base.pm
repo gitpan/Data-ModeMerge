@@ -1,11 +1,10 @@
 package Data::ModeMerge::Mode::Base;
-our $VERSION = '0.20';
+our $VERSION = '0.21';
 # ABSTRACT: Base class for Data::ModeMerge mode handler
 
 
 use Moose;
-use Storable qw/dclone/;
-use Regexp::Copy;
+use Clone qw/clone/;
 
 
 has merger => (is => 'rw');
@@ -402,7 +401,7 @@ sub merge_HASH_HASH {
             return;
         }
         last unless keys %$res;
-        my $c2 = dclone($c);
+        my $c2 = clone($c);
         for (keys %$res) {
             if ($c->allow_override) {
                 my $re = $c->allow_override;
@@ -577,7 +576,7 @@ Data::ModeMerge::Mode::Base - Base class for Data::ModeMerge mode handler
 
 =head1 VERSION
 
-version 0.20
+version 0.21
 
 =head1 SYNOPSIS
 
