@@ -1,5 +1,5 @@
 package Data::ModeMerge;
-our $VERSION = '0.15';
+our $VERSION = '0.16';
 # ABSTRACT: Merge two nested data structures, with merging modes and options
 
 
@@ -377,7 +377,7 @@ Data::ModeMerge - Merge two nested data structures, with merging modes and optio
 
 =head1 VERSION
 
-version 0.15
+version 0.16
 
 =head1 SYNOPSIS
 
@@ -408,6 +408,13 @@ version 0.15
 
     die $res->{error} if $res->{error};
     print $res->{result}; # { a=>2, c=>-1, d => { da=>[1,2] } }
+
+
+    # plain ol' recursive merging, without modes/options (not unlike
+    # Hash::Merge or Data::Merger)
+
+    my $mm = new Data::ModeMerge(config => {parse_prefix=>0, options_key=>undef});
+    my $res = $mm->merge($hash1, $hash2);
 
 =head1 DESCRIPTION
 
@@ -526,15 +533,40 @@ config settings
 C<disable_modes> config
 
 =item * change the prefix for that mode so that it doesn't clash with
-your data via the C<NORMAL>, C<KEEP>, etc config
+your data via the C<set_prefix> config
 
 =item * disable prefix parsing altogether via setting C<parse_prefix>
 config to 0
 
+=back
+
 You can do this via the configuration, or on a per-hash basis, using
 the options key.
 
+See L<Data::ModeMerge::Config> for more details on configuration.
+
+=head1 OPTIONS KEY
+
+Aside from merging mode prefixes, you also need to watch out if your
+hash contains a "" (empty string) key, because by default this is the
+default key used for options key.
+
+Options key are used to specify configuration on a per-hash basis.
+
+If your hash keys might contain "" keys which are not meant to be an
+options key, you can either:
+
+=over 4
+
+=item * change the name of the key for options key, via setting
+C<options_key> config to another string.
+
+=item * turn off options key mechanism,
+by setting C<options_key> config to undef.
+
 =back
+
+See L<Data::ModeMerge::Config> for more details about options key.
 
 =head1 MERGING MODES
 

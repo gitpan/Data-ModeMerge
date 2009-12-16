@@ -1,5 +1,9 @@
 Revision history for Data-ModeMerge
 
+0.16   2009-12-11
+
+       - some work on doc
+       
 0.15   2009-12-11
 
        - new config; premerge_pair_filter
