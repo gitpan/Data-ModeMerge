@@ -1,11 +1,12 @@
 package Data::ModeMerge::Config;
-our $VERSION = '0.21';
+our $VERSION = '0.22';
+
+
 # ABSTRACT: Data::ModeMerge configuration
 
 
 use feature 'state';
 use Moose;
-use MooseX::Aliases;
 
 
 has recurse_hash => (is => 'rw', default => 1);
@@ -129,7 +130,7 @@ Data::ModeMerge::Config - Data::ModeMerge configuration
 
 =head1 VERSION
 
-version 0.21
+version 0.22
 
 =head1 SYNOPSIS
 
@@ -155,7 +156,7 @@ Whether to recursively merge hash. When 1, each key-value pair between
 2 hashes will be recursively merged. Otherwise, the right-side hash
 will just replace the left-side.
 
-Options key will not be parsed under rh=0.
+Options key will not be parsed under recurse_hash=0.
 
 Example:
 
@@ -250,7 +251,7 @@ Example:
  mode_merge(3, 4                         ); # 4
  mode_merge(3, 4, {default_mode => "ADD"}); # 7
 
-=head2 disable_modes => ARRAY
+=head2 disable_modes => ARRAYREF
 
 Context: config, options key
 
@@ -330,7 +331,7 @@ Example:
  mode_merge({a=>1}, []                         ); # success, result=[]
  mode_merge({a=>1}, [], {allow_destroy_hash=>0}); # failed, can't destroy hash
 
-=head2 exclude_parse => ARRAY
+=head2 exclude_parse => ARRAYREF
 
 Context: config, options key
 
@@ -355,7 +356,7 @@ Default: undef
 
 Just like C<exclude_parse> but using regex instead of list.
 
-=head2 include_parse => ARRAY
+=head2 include_parse => ARRAYREF
 
 Context: config, options key
 
@@ -382,7 +383,7 @@ Default: undef
 
 Just like C<include_parse> but using regex instead of list.
 
-=head2 exclude_merge => ARRAY
+=head2 exclude_merge => ARRAYREF
 
 Context: config, options key
 
@@ -407,7 +408,7 @@ Default: undef
 
 Just like C<exclude_merge> but using regex instead of list.
 
-=head2 include_merge => ARRAY
+=head2 include_merge => ARRAYREF
 
 Context: config, options key
 
@@ -424,7 +425,7 @@ Example:
  mode_merge({a=>1, b=>2, c=>3}, {"+a"=>40, "+b"=>50, "+c"=>60, "!c"=>70},
             {include_merge=>["a"]}); # {a=>41, b=>2, c=>3}
 
-=head2 include_merge_regex => ARRAY
+=head2 include_merge_regex => ARRAYREF
 
 Context: config, options key
 
@@ -432,13 +433,15 @@ Default: undef
 
 Just like C<include_merge> but using regex instead of list.
 
-=head2 set_prefix => {MODE => NEW_PREFIX, ...}
+=head2 set_prefix => HASHREF
 
 Context: config, options key
 
 Default: undef
 
-Temporarily change the prefix character for each mode.
+Temporarily change the prefix character for each mode. Value is
+hashref where each hash key is mode and the value is a new prefix
+string.
 
  mode_merge({a=>1, c=>2}, {'+a'=>10, '.c'=>20});                                        # {a=>11, c=>220}
  mode_merge({a=>1, c=>2}, {'+a'=>10, '.c'=>20}, {set_prefix=>{ADD=>'.', CONCAT=>'+'}}); # {a=>110, c=>22}

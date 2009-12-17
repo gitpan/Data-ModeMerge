@@ -1,5 +1,10 @@
 Revision history for Data-ModeMerge
 
+0.22   2009-12-17
+
+       - some work on doc
+       - minor fixes
+
 0.21   2009-12-15
 
        - replace Storable + Regexp::Copy with Clone

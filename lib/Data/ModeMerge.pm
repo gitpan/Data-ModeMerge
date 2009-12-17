@@ -1,5 +1,7 @@
 package Data::ModeMerge;
-our $VERSION = '0.21';
+our $VERSION = '0.22';
+
+
 # ABSTRACT: Merge two nested data structures, with merging modes and options
 
 
@@ -379,7 +381,7 @@ Data::ModeMerge - Merge two nested data structures, with merging modes and optio
 
 =head1 VERSION
 
-version 0.21
+version 0.22
 
 =head1 SYNOPSIS
 
