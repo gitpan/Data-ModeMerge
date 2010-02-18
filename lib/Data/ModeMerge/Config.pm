@@ -1,12 +1,10 @@
 package Data::ModeMerge::Config;
-our $VERSION = '0.22';
-
-
+our $VERSION = '0.23';
 # ABSTRACT: Data::ModeMerge configuration
 
 
 use feature 'state';
-use Moose;
+use Any::Moose;
 
 
 has recurse_hash => (is => 'rw', default => 1);
@@ -118,7 +116,7 @@ sub _config_ok {
 }
 
 __PACKAGE__->meta->make_immutable;
-no Moose;
+no Any::Moose;
 1;
 
 __END__
@@ -130,7 +128,7 @@ Data::ModeMerge::Config - Data::ModeMerge configuration
 
 =head1 VERSION
 
-version 0.22
+version 0.23
 
 =head1 SYNOPSIS
 
@@ -547,7 +545,7 @@ to be set in options key.
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2009 by Steven Haryanto.
+This software is copyright (c) 2010 by Steven Haryanto.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

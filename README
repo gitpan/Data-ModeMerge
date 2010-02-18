@@ -3,7 +3,7 @@ NAME
     and options
 
 VERSION
-    version 0.22
+    version 0.23
 
 SYNOPSIS
         use Data::ModeMerge;
@@ -162,7 +162,7 @@ MERGING PREFIXES AND YOUR DATA
 OPTIONS KEY
     Aside from merging mode prefixes, you also need to watch out if your
     hash contains a "" (empty string) key, because by default this is the
-    default key used for options key.
+    key used for options key.
 
     Options key are used to specify configuration on a per-hash basis.
 
@@ -256,7 +256,7 @@ ATTRIBUTES
     A hashref for config. See Data::ModeMerge::Config.
 
 METHODS
-    For normal use, you will normally only need to use merge().
+    For typical usage, you only need merge().
 
   push_error($errmsg)
     Used by mode handlers to push error when doing merge. End users normally
@@ -375,7 +375,7 @@ AUTHOR
       Steven Haryanto <stevenharyanto@gmail.com>
 
 COPYRIGHT AND LICENSE
-    This software is copyright (c) 2009 by Steven Haryanto.
+    This software is copyright (c) 2010 by Steven Haryanto.
 
     This is free software; you can redistribute it and/or modify it under
     the same terms as the Perl 5 programming language system itself.

@@ -1,11 +1,9 @@
 package Data::ModeMerge::Mode::KEEP;
-our $VERSION = '0.22';
-
-
+our $VERSION = '0.23';
 # ABSTRACT: Handler for Data::ModeMerge KEEP merge mode
 
 
-use Moose;
+use Any::Moose;
 extends 'Data::ModeMerge::Mode::Base';
 
 sub name { 'KEEP' }
@@ -62,7 +60,7 @@ override merge_HASH_HASH => sub {
 };
 
 __PACKAGE__->meta->make_immutable;
-no Moose;
+no Any::Moose;
 1;
 
 __END__
@@ -74,7 +72,7 @@ Data::ModeMerge::Mode::KEEP - Handler for Data::ModeMerge KEEP merge mode
 
 =head1 VERSION
 
-version 0.22
+version 0.23
 
 =head1 SYNOPSIS
 
@@ -90,7 +88,7 @@ This is the class to handle KEEP merge mode.
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2009 by Steven Haryanto.
+This software is copyright (c) 2010 by Steven Haryanto.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

@@ -1,12 +1,11 @@
 package Data::ModeMerge::Mode::Base;
-our $VERSION = '0.22';
-
-
+our $VERSION = '0.23';
 # ABSTRACT: Base class for Data::ModeMerge mode handler
 
 
-use Moose;
-use Clone qw/clone/;
+use Any::Moose;
+#use Storable; # qw/dclone/;
+use Clone; # qw/clone/;
 
 
 has merger => (is => 'rw');
@@ -403,7 +402,9 @@ sub merge_HASH_HASH {
             return;
         }
         last unless keys %$res;
-        my $c2 = clone($c);
+        #print "DEBUG: cloning config ...\n";
+        #my $c2 = Storable::dclone($c);
+        my $c2 = Clone::clone($c);
         for (keys %$res) {
             if ($c->allow_override) {
                 my $re = $c->allow_override;
@@ -566,7 +567,7 @@ sub merge_HASH_HASH {
 }
 
 __PACKAGE__->meta->make_immutable;
-no Moose;
+no Any::Moose;
 1;
 
 __END__
@@ -578,7 +579,7 @@ Data::ModeMerge::Mode::Base - Base class for Data::ModeMerge mode handler
 
 =head1 VERSION
 
-version 0.22
+version 0.23
 
 =head1 SYNOPSIS
 
@@ -627,7 +628,7 @@ Return hash key with prefix of this mode prefix removed.
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2009 by Steven Haryanto.
+This software is copyright (c) 2010 by Steven Haryanto.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

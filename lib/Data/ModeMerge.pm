@@ -1,11 +1,9 @@
 package Data::ModeMerge;
-our $VERSION = '0.22';
-
-
+our $VERSION = '0.23';
 # ABSTRACT: Merge two nested data structures, with merging modes and options
 
 
-use Moose;
+use Any::Moose;
 use Data::ModeMerge::Config;
 use Data::Dumper;
 require Exporter;
@@ -370,6 +368,7 @@ sub _path_is_included {
 
 
 __PACKAGE__->meta->make_immutable;
+no Any::Moose;
 1;
 
 __END__
@@ -381,7 +380,7 @@ Data::ModeMerge - Merge two nested data structures, with merging modes and optio
 
 =head1 VERSION
 
-version 0.22
+version 0.23
 
 =head1 SYNOPSIS
 
@@ -550,7 +549,7 @@ See L<Data::ModeMerge::Config> for more details on configuration.
 
 Aside from merging mode prefixes, you also need to watch out if your
 hash contains a "" (empty string) key, because by default this is the
-default key used for options key.
+key used for options key.
 
 Options key are used to specify configuration on a per-hash basis.
 
@@ -660,7 +659,7 @@ A hashref for config. See L<Data::ModeMerge::Config>.
 
 =head1 METHODS
 
-For normal use, you will normally only need to use merge().
+For typical usage, you only need merge().
 
 =head2 push_error($errmsg)
 
@@ -800,7 +799,7 @@ L<http://search.cpan.org/dist/Data-ModeMerge/>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2009 by Steven Haryanto.
+This software is copyright (c) 2010 by Steven Haryanto.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

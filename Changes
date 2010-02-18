@@ -1,5 +1,9 @@
 Revision history for Data-ModeMerge
 
+0.23   2010-02-17
+
+       - switch from Moose to Any::Moose (+Mouse as dependency)
+
 0.22   2009-12-17
 
        - some work on doc
