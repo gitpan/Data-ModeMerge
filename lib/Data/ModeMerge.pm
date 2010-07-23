@@ -1,5 +1,7 @@
 package Data::ModeMerge;
-our $VERSION = '0.23';
+BEGIN {
+  $Data::ModeMerge::VERSION = '0.24';
+}
 # ABSTRACT: Merge two nested data structures, with merging modes and options
 
 
@@ -380,7 +382,7 @@ Data::ModeMerge - Merge two nested data structures, with merging modes and optio
 
 =head1 VERSION
 
-version 0.23
+version 0.24
 
 =head1 SYNOPSIS
 
@@ -472,11 +474,11 @@ command-line? This is useful in a hosting or other retrictive
 environment where we want to limit users' freedom to some levels. This
 is possible via the KEEP mode merging.
 
- mode_merge({"^bar"=>2, "^baz"=>1}, {bar=>3, "!baz"=>0, quux=>7});
+ mode_merge({"^bar"=>2, "^baz"=>1}, {bar=>3, "!baz"=>0, qux=>7});
 
 will result in:
 
- {"^bar"=>2, "^baz"=>1, quux=>7}
+ {"^bar"=>2, "^baz"=>1, qux=>7}
 
 effectively protecting C<bar> and C<baz> from being
 overriden/deleted/etc.
@@ -605,7 +607,7 @@ is equivalent to:
 
 and will merge to become:
 
- {b=>3}
+ {h=>{b=>3}}
 
 =head2 DELETE ('!' prefix on the right side)
 
@@ -745,6 +747,31 @@ the operations against other modes:
 
  # and so on
 
+=head1 FAQ
+
+=head2 What is this module good for? Why would I want to use this module instead of the other hash merge modules?
+
+If you just need to (deeply) merge two hashes, chances are you do not
+need this module. Use, for example, L<Hash::Merge>, which is also
+flexible enough because it allows you to set merging behaviour for
+merging different types (e.g. SCALAR vs ARRAY).
+
+You might need this module if your data is recursive/self-referencing
+(which, last time I checked, is not handled well by Hash::Merge), or
+if you want to be able to merge differently (i.e. apply different
+merging B<modes>) according to different prefixes on the key, or
+through special key. In other words, you specify merging modes from
+inside the hash itself.
+
+I originally wrote Data::ModeMerge this for L<Data::Schema> and
+L<Config::Tree>. I want to reuse the "parent" schema (or
+configuration) in more ways other than just override conflicting
+keys. I also want to be able to allow the parent to protect certain
+keys from being overriden. I found these two features lacking in all
+merging modules that I've evaluated prior to writing Data::ModeMerge.
+
+=back
+
 =head1 SEE ALSO
 
 L<Data::ModeMerge::Config>
@@ -754,44 +781,6 @@ L<Hash::Merge>, L<Hash::Merge::Simple>
 
 L<Data::Schema> and L<Config::Tree> (among others, two modules which
 use Data::ModeMerge)
-
-L<Data::PrefixMerge> is the old name for this module.
-
-=head1 BUGS
-
-Please report any bugs or feature requests to C<bug-data-modemerge
-at rt.cpan.org>, or through the web interface at
-L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Data-ModeMerge>.  I
-will be notified, and then you'll automatically be notified of
-progress on your bug as I make changes.
-
-=head1 SUPPORT
-
-You can find documentation for this module with the perldoc command.
-
-    perldoc Data::ModeMerge
-
-You can also look for information at:
-
-=over 4
-
-=item * RT: CPAN's request tracker
-
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Data-ModeMerge>
-
-=item * AnnoCPAN: Annotated CPAN documentation
-
-L<http://annocpan.org/dist/Data-ModeMerge>
-
-=item * CPAN Ratings
-
-L<http://cpanratings.perl.org/d/Data-ModeMerge>
-
-=item * Search CPAN
-
-L<http://search.cpan.org/dist/Data-ModeMerge/>
-
-=back
 
 =head1 AUTHOR
 

@@ -1,5 +1,9 @@
 Revision history for Data-ModeMerge
 
+0.24   2010-07-23
+
+       - switch from Clone to Clone::Any (but still list Clone as dep)
+
 0.23   2010-02-17
 
        - switch from Moose to Any::Moose (+Mouse as dependency)
@@ -45,7 +49,7 @@ Revision history for Data-ModeMerge
 0.16   2009-12-11
 
        - some work on doc
-       
+
 0.15   2009-12-11
 
        - new config; premerge_pair_filter
@@ -53,13 +57,13 @@ Revision history for Data-ModeMerge
        - NORMAL mode can handle CODE refs
 
        - can merge recursive/circular references (though not all possible cases)
-       
+
 0.14    2009-12-07
 
         - Minor fix to Makefile.PL
 
         - Minor fix to options key handling
-        
+
 0.13    2009-12-07
 
         This is a major refactoring of the module. The goal is to make
@@ -88,7 +92,7 @@ Revision history for Data-ModeMerge
 
         - incompatible change: configuration 'parse_hash_key_prefix'
           renamed to 'parse_prefix'.
-        
+
         - removed: remove_keep_prefix(), replaced by the more generic
           remove_prefix().
 
@@ -110,13 +114,13 @@ Revision history for Data-ModeMerge
 
         - new config: disable_modes. each merging mode can now be
           individually enabled/disabled through configuration.
-        
+
         - options key now understands almost all configuration.
 
 0.12    2009-11-25
         - new option: hash_options_key
         - fixed random ordering bug (closes #51799)
-        
+
 0.11    2009-11-23
         - add max_level parameter to remove_keep_prefixes()
 

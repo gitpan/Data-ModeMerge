@@ -1,5 +1,7 @@
 package Data::ModeMerge::Mode::DELETE;
-our $VERSION = '0.23';
+BEGIN {
+  $Data::ModeMerge::Mode::DELETE::VERSION = '0.24';
+}
 # ABSTRACT: Handler for Data::ModeMerge DELETE merge mode
 
 
@@ -83,7 +85,7 @@ Data::ModeMerge::Mode::DELETE - Handler for Data::ModeMerge DELETE merge mode
 
 =head1 VERSION
 
-version 0.23
+version 0.24
 
 =head1 SYNOPSIS
 

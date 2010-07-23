@@ -1,11 +1,13 @@
 package Data::ModeMerge::Mode::Base;
-our $VERSION = '0.23';
+BEGIN {
+  $Data::ModeMerge::Mode::Base::VERSION = '0.24';
+}
 # ABSTRACT: Base class for Data::ModeMerge mode handler
 
 
 use Any::Moose;
 #use Storable; # qw/dclone/;
-use Clone; # qw/clone/;
+use Clone::Any qw/clone/;
 
 
 has merger => (is => 'rw');
@@ -404,7 +406,7 @@ sub merge_HASH_HASH {
         last unless keys %$res;
         #print "DEBUG: cloning config ...\n";
         #my $c2 = Storable::dclone($c);
-        my $c2 = Clone::clone($c);
+        my $c2 = clone($c);
         for (keys %$res) {
             if ($c->allow_override) {
                 my $re = $c->allow_override;
@@ -579,7 +581,7 @@ Data::ModeMerge::Mode::Base - Base class for Data::ModeMerge mode handler
 
 =head1 VERSION
 
-version 0.23
+version 0.24
 
 =head1 SYNOPSIS
 
