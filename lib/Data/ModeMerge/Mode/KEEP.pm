@@ -1,10 +1,11 @@
 package Data::ModeMerge::Mode::KEEP;
 BEGIN {
-  $Data::ModeMerge::Mode::KEEP::VERSION = '0.24';
+  $Data::ModeMerge::Mode::KEEP::VERSION = '0.25';
 }
 # ABSTRACT: Handler for Data::ModeMerge KEEP merge mode
 
 
+use 5.010;
 use Any::Moose;
 extends 'Data::ModeMerge::Mode::Base';
 
@@ -74,7 +75,7 @@ Data::ModeMerge::Mode::KEEP - Handler for Data::ModeMerge KEEP merge mode
 
 =head1 VERSION
 
-version 0.24
+version 0.25
 
 =head1 SYNOPSIS
 
@@ -84,9 +85,11 @@ version 0.24
 
 This is the class to handle KEEP merge mode.
 
+=for Pod::Coverage ^merge_.*
+
 =head1 AUTHOR
 
-  Steven Haryanto <stevenharyanto@gmail.com>
+Steven Haryanto <stevenharyanto@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 

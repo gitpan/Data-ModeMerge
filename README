@@ -3,7 +3,7 @@ NAME
     and options
 
 VERSION
-    version 0.24
+    version 0.25
 
 SYNOPSIS
         use Data::ModeMerge;
@@ -361,18 +361,11 @@ SEE ALSO
     Data::ModeMerge)
 
 AUTHOR
-      Steven Haryanto <stevenharyanto@gmail.com>
+    Steven Haryanto <stevenharyanto@gmail.com>
 
 COPYRIGHT AND LICENSE
     This software is copyright (c) 2010 by Steven Haryanto.
 
     This is free software; you can redistribute it and/or modify it under
     the same terms as the Perl 5 programming language system itself.
-
-POD ERRORS
-    Hey! The above document had some coding errors, which are explained
-    below:
-
-    Around line 773:
-        =back without =over
 

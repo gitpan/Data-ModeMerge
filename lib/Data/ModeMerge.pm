@@ -1,10 +1,11 @@
 package Data::ModeMerge;
 BEGIN {
-  $Data::ModeMerge::VERSION = '0.24';
+  $Data::ModeMerge::VERSION = '0.25';
 }
 # ABSTRACT: Merge two nested data structures, with merging modes and options
 
 
+use 5.010;
 use Any::Moose;
 use Data::ModeMerge::Config;
 use Data::Dumper;
@@ -382,7 +383,7 @@ Data::ModeMerge - Merge two nested data structures, with merging modes and optio
 
 =head1 VERSION
 
-version 0.24
+version 0.25
 
 =head1 SYNOPSIS
 
@@ -663,6 +664,8 @@ A hashref for config. See L<Data::ModeMerge::Config>.
 
 For typical usage, you only need merge().
 
+=for Pod::Coverage ^BUILD$
+
 =head2 push_error($errmsg)
 
 Used by mode handlers to push error when doing merge. End users
@@ -770,8 +773,6 @@ keys. I also want to be able to allow the parent to protect certain
 keys from being overriden. I found these two features lacking in all
 merging modules that I've evaluated prior to writing Data::ModeMerge.
 
-=back
-
 =head1 SEE ALSO
 
 L<Data::ModeMerge::Config>
@@ -784,7 +785,7 @@ use Data::ModeMerge)
 
 =head1 AUTHOR
 
-  Steven Haryanto <stevenharyanto@gmail.com>
+Steven Haryanto <stevenharyanto@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 

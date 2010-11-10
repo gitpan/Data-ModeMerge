@@ -1,10 +1,11 @@
 package Data::ModeMerge::Mode::SUBTRACT;
 BEGIN {
-  $Data::ModeMerge::Mode::SUBTRACT::VERSION = '0.24';
+  $Data::ModeMerge::Mode::SUBTRACT::VERSION = '0.25';
 }
 # ABSTRACT: Handler for Data::ModeMerge SUBTRACT merge mode
 
 
+use 5.010;
 use Any::Moose;
 extends 'Data::ModeMerge::Mode::NORMAL';
 
@@ -98,7 +99,7 @@ Data::ModeMerge::Mode::SUBTRACT - Handler for Data::ModeMerge SUBTRACT merge mod
 
 =head1 VERSION
 
-version 0.24
+version 0.25
 
 =head1 SYNOPSIS
 
@@ -108,9 +109,11 @@ version 0.24
 
 This is the class to handle SUBTRACT merge mode.
 
+=for Pod::Coverage ^merge_.*
+
 =head1 AUTHOR
 
-  Steven Haryanto <stevenharyanto@gmail.com>
+Steven Haryanto <stevenharyanto@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 

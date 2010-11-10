@@ -1,10 +1,11 @@
 package Data::ModeMerge::Mode::DELETE;
 BEGIN {
-  $Data::ModeMerge::Mode::DELETE::VERSION = '0.24';
+  $Data::ModeMerge::Mode::DELETE::VERSION = '0.25';
 }
 # ABSTRACT: Handler for Data::ModeMerge DELETE merge mode
 
 
+use 5.010;
 use Any::Moose;
 extends 'Data::ModeMerge::Mode::Base';
 
@@ -85,7 +86,7 @@ Data::ModeMerge::Mode::DELETE - Handler for Data::ModeMerge DELETE merge mode
 
 =head1 VERSION
 
-version 0.24
+version 0.25
 
 =head1 SYNOPSIS
 
@@ -95,9 +96,11 @@ version 0.24
 
 This is the class to handle DELETE merge mode.
 
+=for Pod::Coverage ^merge_.*
+
 =head1 AUTHOR
 
-  Steven Haryanto <stevenharyanto@gmail.com>
+Steven Haryanto <stevenharyanto@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 

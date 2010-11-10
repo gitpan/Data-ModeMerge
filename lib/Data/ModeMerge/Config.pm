@@ -1,11 +1,11 @@
 package Data::ModeMerge::Config;
 BEGIN {
-  $Data::ModeMerge::Config::VERSION = '0.24';
+  $Data::ModeMerge::Config::VERSION = '0.25';
 }
 # ABSTRACT: Data::ModeMerge configuration
 
 
-use feature 'state';
+use 5.010;
 use Any::Moose;
 
 
@@ -130,7 +130,7 @@ Data::ModeMerge::Config - Data::ModeMerge configuration
 
 =head1 VERSION
 
-version 0.24
+version 0.25
 
 =head1 SYNOPSIS
 
@@ -543,7 +543,7 @@ to be set in options key.
 
 =head1 AUTHOR
 
-  Steven Haryanto <stevenharyanto@gmail.com>
+Steven Haryanto <stevenharyanto@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 

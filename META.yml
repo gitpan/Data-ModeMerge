@@ -6,13 +6,13 @@ build_requires:
   Module::Build: 0.3601
 configure_requires:
   Module::Build: 0.3601
-generated_by: 'Dist::Zilla version 2.101241'
+dynamic_config: 0
+generated_by: 'Dist::Zilla version 4.102340, CPAN::Meta::Converter version 2.102400'
 license: perl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
 name: Data-ModeMerge
-recommends: {}
 requires:
   Any::Moose: 0
   Clone: 0
@@ -21,6 +21,6 @@ requires:
   Test::Aggregate: 0
   perl: 5.010000
 resources:
-  homepage: http://search.cpan.org/dist/perl-Data-ModeMerge/
+  homepage: http://search.cpan.org/dist/Data-ModeMerge/
   repository: http://github.com/sharyanto/perl-Data-ModeMerge
-version: 0.24
+version: 0.25

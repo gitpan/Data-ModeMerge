@@ -4,6 +4,7 @@ use warnings;
 
 use Module::Build 0.3601;
 
+
 my %module_build_args = (
   'build_requires' => {
     'Module::Build' => '0.3601'
@@ -16,10 +17,11 @@ my %module_build_args = (
     'Steven Haryanto <stevenharyanto@gmail.com>'
   ],
   'dist_name' => 'Data-ModeMerge',
-  'dist_version' => '0.24',
+  'dist_version' => '0.25',
   'license' => 'perl',
   'module_name' => 'Data::ModeMerge',
   'recommends' => {},
+  'recursive_test_files' => 1,
   'requires' => {
     'Any::Moose' => '0',
     'Clone' => '0',

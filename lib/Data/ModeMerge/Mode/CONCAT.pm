@@ -1,10 +1,11 @@
 package Data::ModeMerge::Mode::CONCAT;
 BEGIN {
-  $Data::ModeMerge::Mode::CONCAT::VERSION = '0.24';
+  $Data::ModeMerge::Mode::CONCAT::VERSION = '0.25';
 }
 # ABSTRACT: Handler for Data::ModeMerge CONCAT merge mode
 
 
+use 5.010;
 use Any::Moose;
 extends 'Data::ModeMerge::Mode::ADD';
 
@@ -34,7 +35,7 @@ Data::ModeMerge::Mode::CONCAT - Handler for Data::ModeMerge CONCAT merge mode
 
 =head1 VERSION
 
-version 0.24
+version 0.25
 
 =head1 SYNOPSIS
 
@@ -44,9 +45,11 @@ version 0.24
 
 This is the class to handle CONCAT merge mode.
 
+=for Pod::Coverage ^merge_.*
+
 =head1 AUTHOR
 
-  Steven Haryanto <stevenharyanto@gmail.com>
+Steven Haryanto <stevenharyanto@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 

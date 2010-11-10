@@ -1,10 +1,11 @@
 package Data::ModeMerge::Mode::Base;
 BEGIN {
-  $Data::ModeMerge::Mode::Base::VERSION = '0.24';
+  $Data::ModeMerge::Mode::Base::VERSION = '0.25';
 }
 # ABSTRACT: Base class for Data::ModeMerge mode handler
 
 
+use 5.010;
 use Any::Moose;
 #use Storable; # qw/dclone/;
 use Clone::Any qw/clone/;
@@ -581,7 +582,7 @@ Data::ModeMerge::Mode::Base - Base class for Data::ModeMerge mode handler
 
 =head1 VERSION
 
-version 0.24
+version 0.25
 
 =head1 SYNOPSIS
 
@@ -590,6 +591,8 @@ version 0.24
 =head1 DESCRIPTION
 
 This is the base class for mode type handlers.
+
+=for Pod::Coverage ^merge_.*
 
 =head1 ATTRIBUTES
 
@@ -626,7 +629,7 @@ Return hash key with prefix of this mode prefix removed.
 
 =head1 AUTHOR
 
-  Steven Haryanto <stevenharyanto@gmail.com>
+Steven Haryanto <stevenharyanto@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
