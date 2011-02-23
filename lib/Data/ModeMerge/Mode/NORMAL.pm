@@ -1,12 +1,15 @@
 package Data::ModeMerge::Mode::NORMAL;
 BEGIN {
-  $Data::ModeMerge::Mode::NORMAL::VERSION = '0.25';
+  $Data::ModeMerge::Mode::NORMAL::VERSION = '0.26';
 }
 # ABSTRACT: Handler for Data::ModeMerge NORMAL merge mode
 
 
 use 5.010;
-use Any::Moose;
+use strict;
+use warnings;
+
+use Moo;
 extends 'Data::ModeMerge::Mode::Base';
 
 sub name { 'NORMAL' }
@@ -87,8 +90,6 @@ sub merge_CODE_CODE {
     ($key, $r);
 }
 
-__PACKAGE__->meta->make_immutable;
-no Any::Moose;
 1;
 
 __END__
@@ -100,7 +101,7 @@ Data::ModeMerge::Mode::NORMAL - Handler for Data::ModeMerge NORMAL merge mode
 
 =head1 VERSION
 
-version 0.25
+version 0.26
 
 =head1 SYNOPSIS
 
@@ -118,7 +119,7 @@ Steven Haryanto <stevenharyanto@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2010 by Steven Haryanto.
+This software is copyright (c) 2011 by Steven Haryanto.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

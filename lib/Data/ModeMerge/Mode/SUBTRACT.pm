@@ -1,12 +1,15 @@
 package Data::ModeMerge::Mode::SUBTRACT;
 BEGIN {
-  $Data::ModeMerge::Mode::SUBTRACT::VERSION = '0.25';
+  $Data::ModeMerge::Mode::SUBTRACT::VERSION = '0.26';
 }
 # ABSTRACT: Handler for Data::ModeMerge SUBTRACT merge mode
 
 
 use 5.010;
-use Any::Moose;
+use strict;
+use warnings;
+
+use Moo;
 extends 'Data::ModeMerge::Mode::NORMAL';
 
 sub name { 'SUBTRACT' }
@@ -86,8 +89,6 @@ sub merge_HASH_HASH {
     $mm->_merge($key, $l, $r2, 'NORMAL');
 }
 
-__PACKAGE__->meta->make_immutable;
-no Any::Moose;
 1;
 
 __END__
@@ -99,7 +100,7 @@ Data::ModeMerge::Mode::SUBTRACT - Handler for Data::ModeMerge SUBTRACT merge mod
 
 =head1 VERSION
 
-version 0.25
+version 0.26
 
 =head1 SYNOPSIS
 
@@ -117,7 +118,7 @@ Steven Haryanto <stevenharyanto@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2010 by Steven Haryanto.
+This software is copyright (c) 2011 by Steven Haryanto.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

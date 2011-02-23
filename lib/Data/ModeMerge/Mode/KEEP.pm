@@ -1,12 +1,15 @@
 package Data::ModeMerge::Mode::KEEP;
 BEGIN {
-  $Data::ModeMerge::Mode::KEEP::VERSION = '0.25';
+  $Data::ModeMerge::Mode::KEEP::VERSION = '0.26';
 }
 # ABSTRACT: Handler for Data::ModeMerge KEEP merge mode
 
 
 use 5.010;
-use Any::Moose;
+use strict;
+use warnings;
+
+use Moo;
 extends 'Data::ModeMerge::Mode::Base';
 
 sub name { 'KEEP' }
@@ -37,9 +40,9 @@ sub merge_ARRAY_SCALAR {
     ($key, $l);
 }
 
-override merge_ARRAY_ARRAY => sub {
+sub merge_ARRAY_ARRAY {
     my ($self, $key, $l, $r) = @_;
-    super($key, $l, $r, 'KEEP');
+    $self->SUPER::merge_ARRAY_ARRAY($key, $l, $r, 'KEEP');
 };
 
 sub merge_ARRAY_HASH {
@@ -57,13 +60,11 @@ sub merge_HASH_ARRAY {
     ($key, $l);
 }
 
-override merge_HASH_HASH => sub {
+sub merge_HASH_HASH {
     my ($self, $key, $l, $r) = @_;
-    super($l, $r, 'KEEP');
+    $self->SUPER::merge_HASH_HASH($key, $l, $r, 'KEEP');
 };
 
-__PACKAGE__->meta->make_immutable;
-no Any::Moose;
 1;
 
 __END__
@@ -75,7 +76,7 @@ Data::ModeMerge::Mode::KEEP - Handler for Data::ModeMerge KEEP merge mode
 
 =head1 VERSION
 
-version 0.25
+version 0.26
 
 =head1 SYNOPSIS
 
@@ -93,7 +94,7 @@ Steven Haryanto <stevenharyanto@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2010 by Steven Haryanto.
+This software is copyright (c) 2011 by Steven Haryanto.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

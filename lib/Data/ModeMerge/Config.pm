@@ -1,42 +1,45 @@
 package Data::ModeMerge::Config;
 BEGIN {
-  $Data::ModeMerge::Config::VERSION = '0.25';
+  $Data::ModeMerge::Config::VERSION = '0.26';
 }
 # ABSTRACT: Data::ModeMerge configuration
 
 
 use 5.010;
-use Any::Moose;
+use strict;
+use warnings;
+
+use Moo;
 
 
-has recurse_hash => (is => 'rw', default => 1);
+has recurse_hash => (is => 'rw', default => sub{1});
 
 
-has recurse_array => (is => 'rw', default => 0);
+has recurse_array => (is => 'rw', default => sub{0});
 
 
-has parse_prefix => (is => 'rw', default => 1);
+has parse_prefix => (is => 'rw', default => sub{1});
 
 
 has wanted_path => (is => 'rw');
 
 
-has default_mode => (is => 'rw', default => 'NORMAL');
+has default_mode => (is => 'rw', default => sub{'NORMAL'});
 
 
 has disable_modes => (is => 'rw');
 
 
-has allow_create_array => (is => 'rw', default => 1);
+has allow_create_array => (is => 'rw', default => sub{1});
 
 
-has allow_create_hash => (is => 'rw', default => 1);
+has allow_create_hash => (is => 'rw', default => sub{1});
 
 
-has allow_destroy_array => (is => 'rw', default => 1);
+has allow_destroy_array => (is => 'rw', default => sub{1});
 
 
-has allow_destroy_hash => (is => 'rw', default => 1);
+has allow_destroy_hash => (is => 'rw', default => sub{1});
 
 
 has exclude_parse => (is => 'rw');
@@ -66,13 +69,13 @@ has include_merge_regex => (is => 'rw');
 has set_prefix => (is => 'rw');
 
 
-has readd_prefix => (is => 'rw', default => 1);
+has readd_prefix => (is => 'rw', default => sub{1});
 
 
 has premerge_pair_filter => (is => 'rw');
 
 
-has options_key => (is => 'rw', default => '');
+has options_key => (is => 'rw', default => sub{''});
 
 
 has allow_override => (is => 'rw');
@@ -117,8 +120,6 @@ sub _config_ok {
                   /];
 }
 
-__PACKAGE__->meta->make_immutable;
-no Any::Moose;
 1;
 
 __END__
@@ -130,7 +131,7 @@ Data::ModeMerge::Config - Data::ModeMerge configuration
 
 =head1 VERSION
 
-version 0.25
+version 0.26
 
 =head1 SYNOPSIS
 
@@ -547,7 +548,7 @@ Steven Haryanto <stevenharyanto@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2010 by Steven Haryanto.
+This software is copyright (c) 2011 by Steven Haryanto.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

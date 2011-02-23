@@ -1,12 +1,15 @@
 package Data::ModeMerge::Mode::CONCAT;
 BEGIN {
-  $Data::ModeMerge::Mode::CONCAT::VERSION = '0.25';
+  $Data::ModeMerge::Mode::CONCAT::VERSION = '0.26';
 }
 # ABSTRACT: Handler for Data::ModeMerge CONCAT merge mode
 
 
 use 5.010;
-use Any::Moose;
+use strict;
+use warnings;
+
+use Moo;
 extends 'Data::ModeMerge::Mode::ADD';
 
 sub name { 'CONCAT' }
@@ -22,8 +25,6 @@ sub merge_SCALAR_SCALAR {
     ($key, ($l // "") . $r);
 }
 
-__PACKAGE__->meta->make_immutable;
-no Any::Moose;
 1;
 
 __END__
@@ -35,7 +36,7 @@ Data::ModeMerge::Mode::CONCAT - Handler for Data::ModeMerge CONCAT merge mode
 
 =head1 VERSION
 
-version 0.25
+version 0.26
 
 =head1 SYNOPSIS
 
@@ -53,7 +54,7 @@ Steven Haryanto <stevenharyanto@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2010 by Steven Haryanto.
+This software is copyright (c) 2011 by Steven Haryanto.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

@@ -1,14 +1,17 @@
 package Data::ModeMerge::Mode::Base;
 BEGIN {
-  $Data::ModeMerge::Mode::Base::VERSION = '0.25';
+  $Data::ModeMerge::Mode::Base::VERSION = '0.26';
 }
 # ABSTRACT: Base class for Data::ModeMerge mode handler
 
 
 use 5.010;
-use Any::Moose;
+use strict;
+use warnings;
+
 #use Storable; # qw/dclone/;
 use Clone::Any qw/clone/;
+use Moo;
 
 
 has merger => (is => 'rw');
@@ -569,8 +572,6 @@ sub merge_HASH_HASH {
     ($key, $res, $backup);
 }
 
-__PACKAGE__->meta->make_immutable;
-no Any::Moose;
 1;
 
 __END__
@@ -582,7 +583,7 @@ Data::ModeMerge::Mode::Base - Base class for Data::ModeMerge mode handler
 
 =head1 VERSION
 
-version 0.25
+version 0.26
 
 =head1 SYNOPSIS
 
@@ -597,6 +598,8 @@ This is the base class for mode type handlers.
 =head1 ATTRIBUTES
 
 =head1 METHODS
+
+=for Pod::Coverage BUILD
 
 =head2 name
 
@@ -633,7 +636,7 @@ Steven Haryanto <stevenharyanto@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2010 by Steven Haryanto.
+This software is copyright (c) 2011 by Steven Haryanto.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

@@ -17,16 +17,14 @@ my %module_build_args = (
     'Steven Haryanto <stevenharyanto@gmail.com>'
   ],
   'dist_name' => 'Data-ModeMerge',
-  'dist_version' => '0.25',
+  'dist_version' => '0.26',
   'license' => 'perl',
   'module_name' => 'Data::ModeMerge',
   'recommends' => {},
   'recursive_test_files' => 1,
   'requires' => {
-    'Any::Moose' => '0',
-    'Clone' => '0',
     'Clone::Any' => '0',
-    'Mouse' => '0',
+    'Moo' => '0',
     'Test::Aggregate' => '0',
     'perl' => '5.010000'
   },

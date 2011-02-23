@@ -3,7 +3,7 @@ NAME
     and options
 
 VERSION
-    version 0.25
+    version 0.26
 
 SYNOPSIS
         use Data::ModeMerge;
@@ -364,7 +364,7 @@ AUTHOR
     Steven Haryanto <stevenharyanto@gmail.com>
 
 COPYRIGHT AND LICENSE
-    This software is copyright (c) 2010 by Steven Haryanto.
+    This software is copyright (c) 2011 by Steven Haryanto.
 
     This is free software; you can redistribute it and/or modify it under
     the same terms as the Perl 5 programming language system itself.
