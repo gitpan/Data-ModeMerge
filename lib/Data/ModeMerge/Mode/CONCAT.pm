@@ -1,6 +1,6 @@
 package Data::ModeMerge::Mode::CONCAT;
 BEGIN {
-  $Data::ModeMerge::Mode::CONCAT::VERSION = '0.26';
+  $Data::ModeMerge::Mode::CONCAT::VERSION = '0.27';
 }
 # ABSTRACT: Handler for Data::ModeMerge CONCAT merge mode
 
@@ -36,7 +36,7 @@ Data::ModeMerge::Mode::CONCAT - Handler for Data::ModeMerge CONCAT merge mode
 
 =head1 VERSION
 
-version 0.26
+version 0.27
 
 =head1 SYNOPSIS
 

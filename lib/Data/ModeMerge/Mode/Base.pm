@@ -1,6 +1,6 @@
 package Data::ModeMerge::Mode::Base;
 BEGIN {
-  $Data::ModeMerge::Mode::Base::VERSION = '0.26';
+  $Data::ModeMerge::Mode::Base::VERSION = '0.27';
 }
 # ABSTRACT: Base class for Data::ModeMerge mode handler
 
@@ -583,7 +583,7 @@ Data::ModeMerge::Mode::Base - Base class for Data::ModeMerge mode handler
 
 =head1 VERSION
 
-version 0.26
+version 0.27
 
 =head1 SYNOPSIS
 

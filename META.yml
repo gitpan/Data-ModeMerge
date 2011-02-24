@@ -14,6 +14,7 @@ meta-spec:
   version: 1.4
 name: Data-ModeMerge
 requires:
+  Clone: 0
   Clone::Any: 0
   Moo: 0
   Test::Aggregate: 0
@@ -21,4 +22,4 @@ requires:
 resources:
   homepage: http://search.cpan.org/dist/Data-ModeMerge/
   repository: http://github.com/sharyanto/perl-Data-ModeMerge
-version: 0.26
+version: 0.27

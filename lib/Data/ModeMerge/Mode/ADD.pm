@@ -1,6 +1,6 @@
 package Data::ModeMerge::Mode::ADD;
 BEGIN {
-  $Data::ModeMerge::Mode::ADD::VERSION = '0.26';
+  $Data::ModeMerge::Mode::ADD::VERSION = '0.27';
 }
 # ABSTRACT: Handler for Data::ModeMerge ADD merge mode
 
@@ -77,7 +77,7 @@ Data::ModeMerge::Mode::ADD - Handler for Data::ModeMerge ADD merge mode
 
 =head1 VERSION
 
-version 0.26
+version 0.27
 
 =head1 SYNOPSIS
 
