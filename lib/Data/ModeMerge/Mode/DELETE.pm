@@ -1,16 +1,10 @@
 package Data::ModeMerge::Mode::DELETE;
-BEGIN {
-  $Data::ModeMerge::Mode::DELETE::VERSION = '0.27';
-}
-# ABSTRACT: Handler for Data::ModeMerge DELETE merge mode
-
 
 use 5.010;
-use strict;
-use warnings;
-
 use Moo;
 extends 'Data::ModeMerge::Mode::Base';
+
+our $VERSION = '0.28'; # VERSION
 
 sub name { 'DELETE' }
 
@@ -77,6 +71,8 @@ sub merge_HASH_HASH {
 }
 
 1;
+# ABSTRACT: Handler for Data::ModeMerge DELETE merge mode
+
 
 __END__
 =pod
@@ -87,11 +83,11 @@ Data::ModeMerge::Mode::DELETE - Handler for Data::ModeMerge DELETE merge mode
 
 =head1 VERSION
 
-version 0.27
+version 0.28
 
 =head1 SYNOPSIS
 
-    use Data::ModeMerge;
+ use Data::ModeMerge;
 
 =head1 DESCRIPTION
 
@@ -105,7 +101,7 @@ Steven Haryanto <stevenharyanto@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2011 by Steven Haryanto.
+This software is copyright (c) 2012 by Steven Haryanto.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

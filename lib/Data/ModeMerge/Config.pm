@@ -1,87 +1,34 @@
 package Data::ModeMerge::Config;
-BEGIN {
-  $Data::ModeMerge::Config::VERSION = '0.27';
-}
-# ABSTRACT: Data::ModeMerge configuration
-
 
 use 5.010;
-use strict;
-use warnings;
-
 use Moo;
 
+our $VERSION = '0.28'; # VERSION
 
-has recurse_hash => (is => 'rw', default => sub{1});
-
-
-has recurse_array => (is => 'rw', default => sub{0});
-
-
-has parse_prefix => (is => 'rw', default => sub{1});
-
-
-has wanted_path => (is => 'rw');
-
-
-has default_mode => (is => 'rw', default => sub{'NORMAL'});
-
-
-has disable_modes => (is => 'rw');
-
-
-has allow_create_array => (is => 'rw', default => sub{1});
-
-
-has allow_create_hash => (is => 'rw', default => sub{1});
-
-
-has allow_destroy_array => (is => 'rw', default => sub{1});
-
-
-has allow_destroy_hash => (is => 'rw', default => sub{1});
-
-
-has exclude_parse => (is => 'rw');
-
-
-has exclude_parse_regex => (is => 'rw');
-
-
-has include_parse => (is => 'rw');
-
-
-has include_parse_regex => (is => 'rw');
-
-
-has exclude_merge => (is => 'rw');
-
-
-has exclude_merge_regex => (is => 'rw');
-
-
-has include_merge => (is => 'rw');
-
-
-has include_merge_regex => (is => 'rw');
-
-
-has set_prefix => (is => 'rw');
-
-
-has readd_prefix => (is => 'rw', default => sub{1});
-
-
-has premerge_pair_filter => (is => 'rw');
-
-
-has options_key => (is => 'rw', default => sub{''});
-
-
-has allow_override => (is => 'rw');
-
-
-has disallow_override => (is => 'rw');
+has recurse_hash          => (is => 'rw', default => sub{1});
+has recurse_array         => (is => 'rw', default => sub{0});
+has parse_prefix          => (is => 'rw', default => sub{1});
+has wanted_path           => (is => 'rw');
+has default_mode          => (is => 'rw', default => sub{'NORMAL'});
+has disable_modes         => (is => 'rw');
+has allow_create_array    => (is => 'rw', default => sub{1});
+has allow_create_hash     => (is => 'rw', default => sub{1});
+has allow_destroy_array   => (is => 'rw', default => sub{1});
+has allow_destroy_hash    => (is => 'rw', default => sub{1});
+has exclude_parse         => (is => 'rw');
+has exclude_parse_regex   => (is => 'rw');
+has include_parse         => (is => 'rw');
+has include_parse_regex   => (is => 'rw');
+has exclude_merge         => (is => 'rw');
+has exclude_merge_regex   => (is => 'rw');
+has include_merge         => (is => 'rw');
+has include_merge_regex   => (is => 'rw');
+has set_prefix            => (is => 'rw');
+has readd_prefix          => (is => 'rw', default => sub{1});
+has premerge_pair_filter  => (is => 'rw');
+has options_key           => (is => 'rw', default => sub{''});
+has allow_override        => (is => 'rw');
+has disallow_override     => (is => 'rw');
 
 # list of config settings only available in merger-object's config
 # (not in options key)
@@ -121,6 +68,8 @@ sub _config_ok {
 }
 
 1;
+# ABSTRACT: Data::ModeMerge configuration
+
 
 __END__
 =pod
@@ -131,15 +80,15 @@ Data::ModeMerge::Config - Data::ModeMerge configuration
 
 =head1 VERSION
 
-version 0.27
+version 0.28
 
 =head1 SYNOPSIS
 
-    # getting configuration
-    if ($mm->config->allow_extra_hash_keys) { ... }
+ # getting configuration
+ if ($mm->config->allow_extra_hash_keys) { ... }
 
-    # setting configuration
-    $mm->config->max_warnings(100);
+ # setting configuration
+ $mm->config->max_warnings(100);
 
 =head1 DESCRIPTION
 
@@ -548,7 +497,7 @@ Steven Haryanto <stevenharyanto@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2011 by Steven Haryanto.
+This software is copyright (c) 2012 by Steven Haryanto.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

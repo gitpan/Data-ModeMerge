@@ -1,30 +1,22 @@
 package Data::ModeMerge;
-BEGIN {
-  $Data::ModeMerge::VERSION = '0.27';
-}
-# ABSTRACT: Merge two nested data structures, with merging modes and options
-
 
 use 5.010;
-use strict;
-use warnings;
-
-use Data::ModeMerge::Config;
-use Data::Dumper;
 use Moo;
+
+use Data::Dumper;
+use Data::ModeMerge::Config;
 
 require Exporter;
 our @ISA = qw(Exporter);
 our @EXPORT = qw(mode_merge);
 
+our $VERSION = '0.28'; # VERSION
 
 sub mode_merge {
     my ($l, $r, $config_vars) = @_;
     my $mm = __PACKAGE__->new(config => $config_vars);
     $mm->merge($l, $r);
 }
-
-
 
 has config => (is => "rw");
 
@@ -39,7 +31,6 @@ has path => (is => "rw", default => sub { [] });
 has errors => (is => "rw", default => sub { [] });
 has mem => (is => "rw", default => sub { {} }); # for handling circular refs. {key=>{res=>[...], todo=>[sub1, ...]}, ...}
 has cur_mem_key => (is => "rw"); # for handling circular refs. instead of passing around this as argument, we put it here.
-
 
 sub _dump {
     my ($self, $var) = @_;
@@ -125,13 +116,11 @@ sub BUILD {
     }
 }
 
-
 sub push_error {
     my ($self, $errmsg) = @_;
     push @{ $self->errors }, [[@{ $self->path }], $errmsg];
     return;
 }
-
 
 sub register_mode {
     my ($self, $name0) = @_;
@@ -154,7 +143,6 @@ sub register_mode {
     $self->modes->{$name} = $obj;
 }
 
-
 sub check_prefix {
     my ($self, $hash_key) = @_;
     die "Hash key not a string" if ref($hash_key);
@@ -173,7 +161,6 @@ sub check_prefix {
     return;
 }
 
-
 sub check_prefix_on_hash {
     my ($self, $hash) = @_;
     die "Not a hash" unless ref($hash) eq 'HASH';
@@ -183,7 +170,6 @@ sub check_prefix_on_hash {
     }
     $res;
 }
-
 
 sub add_prefix {
     my ($self, $hash_key, $mode) = @_;
@@ -199,7 +185,6 @@ sub add_prefix {
     my $mh = $self->modes->{$mode} or die "Unknown mode: $mode";
     $mh->add_prefix($hash_key);
 }
-
 
 sub remove_prefix {
     my ($self, $hash_key) = @_;
@@ -221,7 +206,6 @@ sub remove_prefix {
     else           { return $hash_key }
 }
 
-
 sub remove_prefix_on_hash {
     my ($self, $hash) = @_;
     die "Not a hash" unless ref($hash) eq 'HASH';
@@ -237,20 +221,17 @@ sub remove_prefix_on_hash {
     $hash;
 }
 
-
 sub save_config {
     my ($self) = @_;
     my %config = %{ $self->config() };
     push @{ $self->config_stack }, \%config;
 }
 
-
 sub restore_config {
     my ($self) = @_;
     my $config = pop @{ $self->config_stack };
     $self->config(Data::ModeMerge::Config->new(%$config));
 }
-
 
 sub merge {
     my ($self, $l, $r) = @_;
@@ -373,8 +354,9 @@ sub _path_is_included {
     $res;
 }
 
-
 1;
+# ABSTRACT: Merge two nested data structures, with merging modes and options
+
 
 __END__
 =pod
@@ -385,7 +367,7 @@ Data::ModeMerge - Merge two nested data structures, with merging modes and optio
 
 =head1 VERSION
 
-version 0.27
+version 0.28
 
 =head1 SYNOPSIS
 
@@ -511,6 +493,8 @@ KEY> section for more details.
 
 This module can handle (though not all possible cases)
 circular/recursive references.
+
+=for Pod::Coverage ^(BUILD)$
 
 =head1 MERGING PREFIXES AND YOUR DATA
 
@@ -662,11 +646,23 @@ method for more details.
 
 A hashref for config. See L<Data::ModeMerge::Config>.
 
+=head2 modes
+
+=head2 combine_rules
+
+=head2 config_stack
+
+=head2 path
+
+=head2 errors
+
+=head2 mem
+
+=head2 cur_mem_key
+
 =head1 METHODS
 
 For typical usage, you only need merge().
-
-=for Pod::Coverage ^BUILD$
 
 =head2 push_error($errmsg)
 
@@ -791,7 +787,7 @@ Steven Haryanto <stevenharyanto@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2011 by Steven Haryanto.
+This software is copyright (c) 2012 by Steven Haryanto.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

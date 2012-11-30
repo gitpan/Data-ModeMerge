@@ -1,18 +1,11 @@
 package Data::ModeMerge::Mode::Base;
-BEGIN {
-  $Data::ModeMerge::Mode::Base::VERSION = '0.27';
-}
-# ABSTRACT: Base class for Data::ModeMerge mode handler
-
 
 use 5.010;
-use strict;
-use warnings;
-
-#use Storable; # qw/dclone/;
-use Clone::Any qw/clone/;
 use Moo;
 
+use Data::Clone qw/clone/;
+
+our $VERSION = '0.28'; # VERSION
 
 has merger => (is => 'rw');
 has prefix => (is => 'rw');
@@ -21,22 +14,17 @@ has check_prefix_sub => (is => 'rw');
 has add_prefix_sub => (is => 'rw');
 has remove_prefix_sub => (is => 'rw');
 
-
-
 sub name {
     die "Subclass must provide name()";
 }
-
 
 sub precedence_level {
     die "Subclass must provide precedence_level()";
 }
 
-
 sub default_prefix {
     die "Subclass must provide default_prefix()";
 }
-
 
 sub default_prefix_re {
     die "Subclass must provide default_prefix_re()";
@@ -48,7 +36,6 @@ sub BUILD {
     $self->prefix_re($self->default_prefix_re);
 }
 
-
 sub check_prefix {
     my ($self, $hash_key) = @_;
     if ($self->check_prefix_sub) {
@@ -58,7 +45,6 @@ sub check_prefix {
     }
 }
 
-
 sub add_prefix {
     my ($self, $hash_key) = @_;
     if ($self->add_prefix_sub) {
@@ -67,7 +53,6 @@ sub add_prefix {
         $self->prefix . $hash_key;
     }
 }
-
 
 sub remove_prefix {
     my ($self, $hash_key) = @_;
@@ -573,6 +558,8 @@ sub merge_HASH_HASH {
 }
 
 1;
+# ABSTRACT: Base class for Data::ModeMerge mode handler
+
 
 __END__
 =pod
@@ -583,23 +570,33 @@ Data::ModeMerge::Mode::Base - Base class for Data::ModeMerge mode handler
 
 =head1 VERSION
 
-version 0.27
+version 0.28
 
 =head1 SYNOPSIS
 
-    use Data::ModeMerge;
+ use Data::ModeMerge;
 
 =head1 DESCRIPTION
 
 This is the base class for mode type handlers.
 
-=for Pod::Coverage ^merge_.*
+=for Pod::Coverage ^(BUILD|merge_.+)$
 
 =head1 ATTRIBUTES
 
-=head1 METHODS
+=head2 merger
 
-=for Pod::Coverage BUILD
+=head2 prefix
+
+=head2 prefix_re
+
+=head2 check_prefix_sub
+
+=head2 add_prefix_sub
+
+=head2 remove_prefix_sub
+
+=head1 METHODS
 
 =head2 name
 
@@ -636,7 +633,7 @@ Steven Haryanto <stevenharyanto@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2011 by Steven Haryanto.
+This software is copyright (c) 2012 by Steven Haryanto.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
