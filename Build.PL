@@ -18,13 +18,13 @@ my %module_build_args = (
     "Steven Haryanto <stevenharyanto\@gmail.com>"
   ],
   "dist_name" => "Data-ModeMerge",
-  "dist_version" => "0.28",
+  "dist_version" => "0.29",
   "license" => "perl",
   "module_name" => "Data::ModeMerge",
   "recommends" => {},
   "recursive_test_files" => 1,
   "requires" => {
-    "Data::Clone" => 0,
+    "Log::Any" => 0,
     "Moo" => 0,
     "perl" => "5.010000"
   },

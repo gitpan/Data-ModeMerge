@@ -1,4 +1,5 @@
 use Data::Dumper;
+#use Test::More;
 
 sub _merge($$;$) {
     my ($a, $b, $dm) = @_;
@@ -17,7 +18,8 @@ sub mmerge_is($$$) {
 sub merge_is($$$$;$) {
     my ($a, $b, $expected, $test_name, $dm) = @_;
     my $res = _merge($a, $b, $dm);
-    is_deeply($res->{result}, $expected, $test_name);
+    is_deeply($res->{result}, $expected, $test_name)
+        or diag explain $res->{result};
 }
 
 sub merge_ok($$$;$) {

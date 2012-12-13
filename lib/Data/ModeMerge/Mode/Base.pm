@@ -1,11 +1,12 @@
 package Data::ModeMerge::Mode::Base;
 
 use 5.010;
+use Log::Any '$log';
 use Moo;
 
-use Data::Clone qw/clone/;
+#use Data::Clone qw/clone/;
 
-our $VERSION = '0.28'; # VERSION
+our $VERSION = '0.29'; # VERSION
 
 has merger => (is => 'rw');
 has prefix => (is => 'rw');
@@ -359,13 +360,15 @@ sub merge_HASH_HASH {
     my $mm = $self->merger;
     my $c = $mm->config;
     $mode //= $c->default_mode;
-    #print "DEBUG: entering merge_H_H(".$mm->_dump($l).", ".$mm->_dump($r).", $mode)\n";
+    #print "DEBUG: entering merge_H_H(".$mm->_dump($l).", ".$mm->_dump($r).", $mode), config=($c)=",$mm->_dump($c),"\n";
+    #$log->trace("using config($c)");
 
     return $self->merge_SCALAR_SCALAR($key, $l, $r) unless $c->recurse_hash;
     return if $c->wanted_path && !$mm->_path_is_included($mm->path, $c->wanted_path);
 
     # STEP 1. MERGE LEFT & RIGHT OPTIONS KEY
     my $config_replaced;
+    my $orig_c = $c;
     my $ok = $c->options_key;
     {
         last unless defined $ok;
@@ -393,9 +396,11 @@ sub merge_HASH_HASH {
             return;
         }
         last unless keys %$res;
-        #print "DEBUG: cloning config ...\n";
-        #my $c2 = Storable::dclone($c);
-        my $c2 = clone($c);
+        #$log->tracef("cloning config ...");
+        # Data::Clone by default does *not* deep-copy object
+        #my $c2 = clone($c);
+        my $c2 = bless({ %$c }, ref($c));
+
         for (keys %$res) {
             if ($c->allow_override) {
                 my $re = $c->allow_override;
@@ -421,11 +426,10 @@ sub merge_HASH_HASH {
             }
             $c2->$_($res->{$_}) unless $_ eq $ok;
         }
-        $mm->save_config;
         $mm->config($c2);
         $config_replaced++;
         $c = $c2;
-        #print "DEBUG: configuration now changed: ".$mm->_dump($c)."\n";
+        #$log->trace("config now changed to $c2");
     }
 
     my $sp = $c->set_prefix;
@@ -550,7 +554,11 @@ sub merge_HASH_HASH {
         }
     }
 
-    $mm->restore_config if $config_replaced;
+    # restore config
+    if ($config_replaced) {
+        $mm->config($orig_c);
+        #print "DEBUG: Restored config, config=", $mm->_dump($mm->config), "\n";
+    }
 
     #print "DEBUG: backup = ".Data::Dumper->new([$backup])->Indent(0)->Terse(1)->Dump."\n";
     #print "DEBUG: leaving merge_H_H, result = ".$mm->_dump($res)."\n";
@@ -570,7 +578,7 @@ Data::ModeMerge::Mode::Base - Base class for Data::ModeMerge mode handler
 
 =head1 VERSION
 
-version 0.28
+version 0.29
 
 =head1 SYNOPSIS
 

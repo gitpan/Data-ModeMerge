@@ -4,7 +4,7 @@ use 5.010;
 use Moo;
 extends 'Data::ModeMerge::Mode::Base';
 
-our $VERSION = '0.28'; # VERSION
+our $VERSION = '0.29'; # VERSION
 
 sub name { 'KEEP' }
 
@@ -73,7 +73,7 @@ Data::ModeMerge::Mode::KEEP - Handler for Data::ModeMerge KEEP merge mode
 
 =head1 VERSION
 
-version 0.28
+version 0.29
 
 =head1 SYNOPSIS
 

@@ -3,7 +3,7 @@ NAME
     and options
 
 VERSION
-    version 0.28
+    version 0.29
 
 SYNOPSIS
         use Data::ModeMerge;
@@ -257,7 +257,6 @@ ATTRIBUTES
 
   modes
   combine_rules
-  config_stack
   path
   errors
   mem
@@ -290,14 +289,6 @@ METHODS
   remove_prefix_on_hash($hash)
     This is like "remove_prefix" but performed on every key of the specified
     hash. Return the same hash but with prefixes removed.
-
-  save_config()
-    Called by mode handlers to save configuration before recursive merge.
-    This is because many configuration settings can be overriden by options
-    key.
-
-  restore_config()
-    Called by mode handlers to restore configuration saved by save_config().
 
   merge($l, $r)
     Merge two nested data structures. Returns the result hash: {

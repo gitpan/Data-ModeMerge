@@ -31,7 +31,7 @@
       },
       "runtime" : {
          "requires" : {
-            "Data::Clone" : 0,
+            "Log::Any" : 0,
             "Moo" : 0,
             "perl" : "5.010000"
          }
@@ -49,6 +49,6 @@
          "url" : "http://github.com/sharyanto/perl-Data-ModeMerge"
       }
    },
-   "version" : "0.28"
+   "version" : "0.29"
 }
 

@@ -4,7 +4,7 @@ use 5.010;
 use Moo;
 extends 'Data::ModeMerge::Mode::NORMAL';
 
-our $VERSION = '0.28'; # VERSION
+our $VERSION = '0.29'; # VERSION
 
 sub name { 'SUBTRACT' }
 
@@ -96,7 +96,7 @@ Data::ModeMerge::Mode::SUBTRACT - Handler for Data::ModeMerge SUBTRACT merge mod
 
 =head1 VERSION
 
-version 0.28
+version 0.29
 
 =head1 SYNOPSIS
 

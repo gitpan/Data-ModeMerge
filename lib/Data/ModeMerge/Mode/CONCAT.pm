@@ -4,7 +4,7 @@ use 5.010;
 use Moo;
 extends 'Data::ModeMerge::Mode::ADD';
 
-our $VERSION = '0.28'; # VERSION
+our $VERSION = '0.29'; # VERSION
 
 sub name { 'CONCAT' }
 
@@ -32,7 +32,7 @@ Data::ModeMerge::Mode::CONCAT - Handler for Data::ModeMerge CONCAT merge mode
 
 =head1 VERSION
 
-version 0.28
+version 0.29
 
 =head1 SYNOPSIS
 

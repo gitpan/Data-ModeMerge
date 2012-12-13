@@ -3,7 +3,7 @@ package Data::ModeMerge::Config;
 use 5.010;
 use Moo;
 
-our $VERSION = '0.28'; # VERSION
+our $VERSION = '0.29'; # VERSION
 
 has recurse_hash          => (is => 'rw', default => sub{1});
 has recurse_array         => (is => 'rw', default => sub{0});
@@ -80,7 +80,7 @@ Data::ModeMerge::Config - Data::ModeMerge configuration
 
 =head1 VERSION
 
-version 0.28
+version 0.29
 
 =head1 SYNOPSIS
 

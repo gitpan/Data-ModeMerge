@@ -1,5 +1,14 @@
 Revision history for Data-ModeMerge
 
+0.29   2012-12-13 (SHARYANTO)
+
+       Thank God the apocalypse did not happen, allowing me to do this release.
+
+       - Fix cloning bug exposed by hash randomization of perl 5.17.6
+         [RT#81807]. Turns out Data::Clone does not deep-copy objects by
+         default. So now we copy configs manually.
+
+
 0.28   2012-11-30 (SHARYANTO)
 
        - Replace Clone::Any with Data::Clone (Clone::Any fallbacks to Storable
