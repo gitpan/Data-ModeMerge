@@ -4,7 +4,7 @@
       "Steven Haryanto <stevenharyanto@gmail.com>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 4.300006, CPAN::Meta::Converter version 2.113640",
+   "generated_by" : "Dist::Zilla version 4.300015, CPAN::Meta::Converter version 2.120921",
    "license" : [
       "perl_5"
    ],
@@ -31,14 +31,14 @@
       },
       "runtime" : {
          "requires" : {
-            "Log::Any" : 0,
-            "Moo" : 0,
-            "perl" : "5.010000"
+            "Log::Any" : "0",
+            "Moo" : "0",
+            "perl" : "5.010001"
          }
       },
       "test" : {
          "requires" : {
-            "Test::Exception" : 0
+            "Test::Exception" : "0"
          }
       }
    },
@@ -49,6 +49,6 @@
          "url" : "http://github.com/sharyanto/perl-Data-ModeMerge"
       }
    },
-   "version" : "0.29"
+   "version" : "0.30"
 }
 

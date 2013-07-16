@@ -4,7 +4,7 @@ use 5.010;
 use Moo;
 extends 'Data::ModeMerge::Mode::Base';
 
-our $VERSION = '0.29'; # VERSION
+our $VERSION = '0.30'; # VERSION
 
 sub name { 'DELETE' }
 
@@ -83,7 +83,7 @@ Data::ModeMerge::Mode::DELETE - Handler for Data::ModeMerge DELETE merge mode
 
 =head1 VERSION
 
-version 0.29
+version 0.30
 
 =head1 SYNOPSIS
 
@@ -101,7 +101,7 @@ Steven Haryanto <stevenharyanto@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2012 by Steven Haryanto.
+This software is copyright (c) 2013 by Steven Haryanto.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

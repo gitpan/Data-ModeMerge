@@ -18,7 +18,7 @@ my %module_build_args = (
     "Steven Haryanto <stevenharyanto\@gmail.com>"
   ],
   "dist_name" => "Data-ModeMerge",
-  "dist_version" => "0.29",
+  "dist_version" => "0.30",
   "license" => "perl",
   "module_name" => "Data::ModeMerge",
   "recommends" => {},
@@ -26,7 +26,7 @@ my %module_build_args = (
   "requires" => {
     "Log::Any" => 0,
     "Moo" => 0,
-    "perl" => "5.010000"
+    "perl" => "5.010001"
   },
   "script_files" => []
 );
